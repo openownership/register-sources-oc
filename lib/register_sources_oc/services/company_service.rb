@@ -1,4 +1,4 @@
-require 'bods_sources_oc/structs/reconciliation_response'
+require 'register_sources_oc/structs/reconciliation_response'
 
 module RegisterSourcesOc
   module Services

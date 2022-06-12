@@ -1,6 +1,6 @@
 require 'digest'
 require 'json'
-require 'bods_sources_oc/structs/company'
+require 'register_sources_oc/structs/company_short'
 require 'active_support/core_ext/hash/indifferent_access'
 
 module RegisterSourcesOc
@@ -130,7 +130,7 @@ module RegisterSourcesOc
           source = JSON.parse(hit['_source'].to_json, symbolize_names: true)
 
           SearchResult.new(
-            Company.new(**source),
+            CompanyShort.new(**source),
             hit['_score']
           )
         end
