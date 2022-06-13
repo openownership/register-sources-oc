@@ -1,34 +1,54 @@
-require 'register_sources_oc/structs/reconciliation_response'
-
 module RegisterSourcesOc
   module Services
     class CompanyService
-      def initialize(company_repository:)
-        @company_repository = company_repository
+      # services: [ { name: 'bulk', service: bulk_service }, { name: 'oc_api', service: oc_api_service }]
+      def initialize(services:, verbose: false)
+        @services = services
+        @verbose = verbose
       end
 
-      # Use to find company number from jurisdiction code and name
-      def reconcile(jurisdiction_code:, company_name:)
-
+      def get_jurisdiction_code(name)
+        try_services do |service|
+          service.get_jurisdiction_code(name)
+        end
       end
 
-      def get_company(jurisdiction_code:, company_number:)
-
+      def get_company(jurisdiction_code, company_number, sparse: true)
+        try_services do |service|
+          service.get_company(jurisdiction_code, company_number, sparse: sparse)
+        end
       end
 
-      # Fuzzy matching - orders by score and picks best
-      def search_companies_by_company_number(jurisdiction_code:, company_number:)
-
+      def search_companies(jurisdiction_code, company_number)
+        try_services do |service|
+          service.search_companies(jurisdiction_code, company_number)
+        end
       end
 
-      # Fuzzy matching - orders by score and picks best
-      def search_companies_by_company_name(jurisdiction_code:, company_name:)
-
+      def search_companies_by_name(name)
+        try_services do |service|
+          service.search_companies_by_name(name)
+        end
       end
 
       private
 
-      attr_reader :company_repository
+      attr_reader :verbose, :services
+
+      def try_services
+        result = nil
+        services.each do |service_h|
+          name = service_h[:name]
+          service = service_h[:service]
+
+          print("TRYING SERVICE #{name}\n") if verbose
+          result = yield service
+          print(result ? "FOUND\n" : "NOT FOUND\n" ) if verbose
+          break if result
+        end
+
+        result
+      end
     end
   end
 end
