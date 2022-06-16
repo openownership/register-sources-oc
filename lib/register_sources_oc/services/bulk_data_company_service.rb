@@ -47,12 +47,8 @@ module RegisterSourcesOc
 
       def search_companies_by_name(name)
         return unless repository_enabled
-        return unless should_try_jurisdiction?(jurisdiction_code)
 
-        results = company_repository.search_by_number(
-          jurisdiction_code: jurisdiction_code,
-          company_number: company_number
-        )
+        results = company_repository.search_companies_by_name(name)
 
         return if results.empty?
 

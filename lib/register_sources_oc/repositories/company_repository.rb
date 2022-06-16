@@ -74,7 +74,7 @@ module RegisterSourcesOc
         )
       end
 
-      def search_by_name(jurisdiction_code:, name:)
+      def search_by_name(name)
         process_results(
           client.search(
             index: index,
@@ -84,13 +84,6 @@ module RegisterSourcesOc
                   must: [
                     {
                       query_string: { default_field: "name", query: name }
-                    },
-                    {
-                      match: {
-                        jurisdiction_code: {
-                          query: jurisdiction_code
-                        }
-                      }
                     }
                   ]
                 }
