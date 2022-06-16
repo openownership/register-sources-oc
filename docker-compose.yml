@@ -25,6 +25,8 @@ services:
       - elasticsearch
     networks:
       - register_sources_test
+    volumes:
+      - '.:/app'
 
 networks:
   register_sources_test:
