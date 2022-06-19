@@ -6,7 +6,7 @@ module RegisterSourcesOc
     include Dry.Types()
   end
 
-  class CompanyShort < Dry::Struct
+  class Company < Dry::Struct
     attribute :company_number, Types::String.optional
     attribute :jurisdiction_code, Types::String.optional
     attribute :name, Types::String.optional

@@ -59,7 +59,7 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
         expect(results.length).to eq 1
         result = results.first
         record = result.record
-        expect(record).to be_a RegisterSourcesOc::CompanyShort
+        expect(record).to be_a RegisterSourcesOc::Company
 
         expect(record.company_number).to eq '123456'
         expect(record.jurisdiction_code).to eq 'gb'
