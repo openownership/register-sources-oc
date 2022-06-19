@@ -6,7 +6,7 @@ require 'active_support/core_ext/hash/indifferent_access'
 module RegisterSourcesOc
   module Repositories
     class CompanyRepository
-      DEFAULT_INDEX = 'companies2'
+      DEFAULT_INDEX = 'companies'
       SearchResult = Struct.new(:record, :score)
 
       def initialize(client:, index: DEFAULT_INDEX)

@@ -42,7 +42,7 @@ module RegisterSourcesOc
 
         return if results.empty?
 
-        results.map(&:record)
+        results.map(&:record).map(&:to_h)
       end
 
       def search_companies_by_name(name)
@@ -52,7 +52,7 @@ module RegisterSourcesOc
 
         return if results.empty?
 
-        results.map(&:record)      
+        results.map(&:record).map(&:to_h)
       end
 
       private
