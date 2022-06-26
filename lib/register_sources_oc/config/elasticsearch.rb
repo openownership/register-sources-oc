@@ -1,5 +1,4 @@
 require 'elasticsearch'
-require_relative 'env'
 
 module RegisterSourcesOc
   module Config

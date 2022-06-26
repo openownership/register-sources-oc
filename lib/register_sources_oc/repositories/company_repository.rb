@@ -1,5 +1,6 @@
 require 'digest'
 require 'json'
+require 'register_sources_oc/config/elasticsearch'
 require 'register_sources_oc/structs/company'
 require 'active_support/core_ext/hash/indifferent_access'
 
@@ -9,7 +10,7 @@ module RegisterSourcesOc
       DEFAULT_INDEX = 'companies'
       SearchResult = Struct.new(:record, :score)
 
-      def initialize(client:, index: DEFAULT_INDEX)
+      def initialize(client: Config::ELASTICSEARCH_CLIENT, index: DEFAULT_INDEX)
         @client = client
         @index = index
       end
