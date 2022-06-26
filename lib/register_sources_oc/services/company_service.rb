@@ -73,11 +73,21 @@ module RegisterSourcesOc
             next unless service1 < service2
             next unless response1 != response2
 
+            incorrect1 = response1.keys.map do |k|
+              next if response1[k] == response2[k]
+              [k, response1[k]]
+            end.compact.to_h
+
+            incorrect2 = response2.keys.map do |k|
+              next if response1[k] == response2[k]
+              [k, response2[k]]
+            end.compact.to_h
+
             match_failures << {
               service1: service1,
-              response1: response1,
+              response1: incorrect1,
               service2: service2,
-              response2: response2
+              response2: incorrect2
             }
           end
         end
