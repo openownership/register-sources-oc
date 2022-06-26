@@ -153,7 +153,7 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       end
 
       before do
-        expect(company_repository).to receive(:search_companies_by_name).with(
+        expect(company_repository).to receive(:search_by_name).with(
           name
         ).and_return results
       end

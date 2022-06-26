@@ -50,7 +50,7 @@ module RegisterSourcesOc
       def search_companies_by_name(name)
         return unless repository_enabled
 
-        results = company_repository.search_companies_by_name(name)
+        results = company_repository.search_by_name(name)
 
         return if results.empty?
 
