@@ -25,7 +25,7 @@ module RegisterSourcesOc
 
         return [] if results.empty?
 
-        [{ company: map_result(results.first) }]
+        [{ company: map_result(results.first[:company]) }]
       end
 
       def search_companies_by_name(name)
@@ -33,7 +33,7 @@ module RegisterSourcesOc
 
         return [] if results.empty?
 
-        [{ company: map_result(results.first) }]
+        [{ company: map_result(results.first[:company]) }]
       end
 
       private

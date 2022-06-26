@@ -1,3 +1,4 @@
+require 'elasticsearch'
 require 'register_sources_oc/repositories/company_repository'
 
 module RegisterSourcesOc
@@ -31,6 +32,8 @@ module RegisterSourcesOc
         return if results.empty?
         
         results[0].record.to_h
+      rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+        nil # fall through to next service
       end
 
       def search_companies(jurisdiction_code, company_number)
@@ -45,6 +48,8 @@ module RegisterSourcesOc
         return if results.empty?
 
         [{ company: results.first.record.to_h }]
+      rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+        nil # fall through to next service
       end
 
       def search_companies_by_name(name)
@@ -55,6 +60,8 @@ module RegisterSourcesOc
         return if results.empty?
 
         [{ company: results.first.record.to_h }]
+      rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+        nil # fall through to next service
       end
 
       private
