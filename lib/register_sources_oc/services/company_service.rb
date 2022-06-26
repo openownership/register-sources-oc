@@ -73,15 +73,8 @@ module RegisterSourcesOc
             next unless service1 < service2
             next unless response1 != response2
 
-            incorrect1 = response1.keys.map do |k|
-              next if response1[k] == response2[k]
-              [k, response1[k]]
-            end.compact.to_h
-
-            incorrect2 = response2.keys.map do |k|
-              next if response1[k] == response2[k]
-              [k, response2[k]]
-            end.compact.to_h
+            incorrect1 = get_non_matching_fields(response1, response2)
+            incorrect2 = get_non_matching_fields(response2, response1)
 
             match_failures << {
               service1: service1,
@@ -93,6 +86,19 @@ module RegisterSourcesOc
         end
 
         match_failures
+      end
+
+      def get_non_matching_fields(response1, response2)
+        if response1.is_a?(Array) != response2.is_a?(Array)
+          response1
+        elsif response1.is_a?(Array)
+          get_non_matching_fields(response1[0], response2[0])
+        else
+          response1.keys.map do |k|
+            next if response1[k] == response2[k]
+            [k, response1[k]]
+          end.compact.to_h
+        end
       end
     end
   end
