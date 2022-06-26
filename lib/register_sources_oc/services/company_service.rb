@@ -1,11 +1,17 @@
+require_relative 'bulk_data_company_service'
+require_relative 'oc_api_company_service'
+
 module RegisterSourcesOc
   module Services
     class CompanyService
       InconsistentResponseError = Class.new(StandardError)
 
       # services: [ { name: 'bulk', service: bulk_service }, { name: 'oc_api', service: oc_api_service }]
-      def initialize(services:, verbose: false, comparison_mode: false)
-        @services = services
+      def initialize(services: nil, verbose: false, comparison_mode: false)
+        @services = services || [
+          { name: "bulk", service: BulkDataCompanyService.new },
+          { name: "api", service: OcApiCompanyService.new }
+        ]
         @verbose = verbose
         @comparison_mode = comparison_mode
       end

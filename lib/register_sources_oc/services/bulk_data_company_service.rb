@@ -1,10 +1,12 @@
+require 'register_sources_oc/repositories/company_repository'
+
 module RegisterSourcesOc
   module Services
     class BulkDataCompanyService
       DEFAULT_JURISDICTION_CODES = ['gb', 'sk', 'dk']
 
       def initialize(
-        company_repository:,
+        company_repository: Repositories::CompanyRepository.new,
         jurisdiction_codes: DEFAULT_JURISDICTION_CODES,
         repository_enabled: true
       )
