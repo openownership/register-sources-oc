@@ -32,6 +32,42 @@ RSpec.shared_examples "trying services examples" do |method, args|
       expect(result).to eq expected
     end
   end
+
+  context 'when comparison_mode true and both services have a result' do
+    let(:comparison_mode) { true }
+
+    context 'with both results matching' do
+      it 'returns result' do
+        expected = double 'result'
+        expect(service1).to receive(method).with(*args).and_return expected
+        expect(service2).to receive(method).with(*args).and_return expected
+
+        result = subject.send(method, *args)
+        expect(result).to eq []
+      end
+    end
+
+    context 'with neither results matching' do
+      it 'returns result' do
+        expected = double 'result'
+        expected2 = double 'result2'
+        expect(service1).to receive(method).with(*args).and_return expected
+        expect(service2).to receive(method).with(*args).and_return expected2
+
+        result = subject.send(method, *args)
+        expect(result).to eq(
+          [
+            {
+              service1: 'service1',
+              response1: expected,
+              service2: 'service2',
+              response2: expected2
+            }
+          ]
+        )
+      end
+    end
+  end
 end
 
 RSpec.describe RegisterSourcesOc::Services::CompanyService do
@@ -41,12 +77,14 @@ RSpec.describe RegisterSourcesOc::Services::CompanyService do
         { name: 'service1', service: service1 },
         { name: 'service2', service: service2 }
       ],
-      verbose: false
+      verbose: false,
+      comparison_mode: comparison_mode
     )
   end
 
   let(:service1) { double 'service1' }
   let(:service2) { double 'service2' }
+  let(:comparison_mode) { false }
 
   describe '#get_jurisdiction_code' do
     include_examples "trying services examples",
