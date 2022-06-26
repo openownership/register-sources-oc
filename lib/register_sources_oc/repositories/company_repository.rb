@@ -83,8 +83,11 @@ module RegisterSourcesOc
               query: {
                 bool: {
                   must: [
-                    {
-                      query_string: { default_field: "name", query: name }
+                    # { query_string: { default_field: "name", query: name } }
+                    match: {
+                      name: {
+                        query: name
+                      }
                     }
                   ]
                 }
