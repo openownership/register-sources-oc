@@ -129,7 +129,7 @@ module RegisterSourcesOc
           if ["true", "t"].include? source[:restricted_for_marketing].to_s.downcase
             source[:restricted_for_marketing] = 'true'
           else
-            source[:restricted_for_marketing] = 'false'
+            source[:restricted_for_marketing] = nil
           end
 
           SearchResult.new(
