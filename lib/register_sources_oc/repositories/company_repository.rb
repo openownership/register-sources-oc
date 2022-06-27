@@ -127,9 +127,9 @@ module RegisterSourcesOc
           source = JSON.parse(hit['_source'].to_json, symbolize_names: true)
 
           if ["true", "t"].include? source[:restricted_for_marketing].to_s.downcase
-            source[:restricted_for_marketing] = true
+            source[:restricted_for_marketing] = 'true'
           else
-            source[:restricted_for_marketing] = false
+            source[:restricted_for_marketing] = 'false'
           end
 
           SearchResult.new(
