@@ -92,8 +92,10 @@ module RegisterSourcesOc
         if response1.is_a?(Array) != response2.is_a?(Array)
           response1
         elsif response1.is_a?(Array)
-          if response1.empty? || response2.empty?
-            response1
+          if response1.empty?
+            {}
+          elsif response2.empty?
+            response1[0][:company]
           else
             get_non_matching_fields(response1[0][:company], response2[0][:company])
           end

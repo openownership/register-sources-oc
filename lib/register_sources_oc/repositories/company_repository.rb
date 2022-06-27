@@ -126,8 +126,10 @@ module RegisterSourcesOc
         mapped = hits.map do |hit|
           source = JSON.parse(hit['_source'].to_json, symbolize_names: true)
 
-          if source[:restricted_for_marketing].to_s.empty?
-            source[:restricted_for_marketing] = nil
+          if ["true", "t"].include? source[:restricted_for_marketing].to_s.downcase
+            source[:restricted_for_marketing] = true
+          else
+            source[:restricted_for_marketing] = false
           end
 
           SearchResult.new(
