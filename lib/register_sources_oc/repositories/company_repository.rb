@@ -122,6 +122,7 @@ module RegisterSourcesOc
 
       def process_results(results)
         hits = results.dig('hits', 'hits') || []
+        hits = hits.sort { |hit| hit['_score'] }.reverse
 
         mapped = hits.map do |hit|
           source = JSON.parse(hit['_source'].to_json, symbolize_names: true)
