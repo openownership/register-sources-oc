@@ -55,6 +55,8 @@ module RegisterSourcesOc
       def search_companies_by_name(name)
         return unless repository_enabled
 
+        return # TODO: disable for now
+
         results = company_repository.search_by_name(name)
 
         return if results.empty?
