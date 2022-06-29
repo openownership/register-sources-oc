@@ -76,7 +76,7 @@ module RegisterSourcesOc
             incorrect1 = get_non_matching_fields(response1, response2)
             incorrect2 = get_non_matching_fields(response2, response1)
 
-            next unless incorrect1.empty? && incorrect2.empty?
+            next if incorrect1.empty? && incorrect2.empty?
 
             match_failures << {
               service1: service1,
