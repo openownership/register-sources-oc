@@ -13,7 +13,8 @@ module RegisterSourcesOc
     attribute :company_type, Types::String.optional
     attribute :incorporation_date, Types::String.optional
     attribute :dissolution_date, Types::String.optional
-    attribute :restricted_for_marketing, Types::String.optional
+    attribute :restricted_for_marketing, Types::Strict::Bool.optional
     attribute :registered_address_in_full, Types::String.optional
+    attribute :registered_address_country, Types::String.optional
   end
 end

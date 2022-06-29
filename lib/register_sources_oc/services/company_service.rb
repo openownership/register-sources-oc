@@ -102,6 +102,10 @@ module RegisterSourcesOc
         else
           response1.keys.map do |k|
             next if response1[k] == response2[k]
+            if (k == :registered_address_in_full)
+              next if [response1[k].to_s, response1[:registered_address_country].to_s].join(', ') == response2[k]
+              next if [response2[k].to_s, response2[:registered_address_country].to_s].join(', ') == response1[k]
+            end
             [k, response1[k]]
           end.compact.to_h
         end
