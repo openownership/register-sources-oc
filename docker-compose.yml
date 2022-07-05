@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   register_elasticsearch_test:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.6.0
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2-amd64
     environment:
       - 'discovery.type=single-node'
       - 'cluster.name=register-elasticsearch'
