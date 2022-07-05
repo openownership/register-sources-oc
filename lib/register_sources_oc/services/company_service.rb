@@ -1,3 +1,5 @@
+require 'register_sources_oc/utils/result_comparer'
+
 require_relative 'bulk_data_company_service'
 require_relative 'oc_api_company_service'
 
@@ -14,6 +16,7 @@ module RegisterSourcesOc
         ]
         @verbose = verbose
         @comparison_mode = comparison_mode
+        @comparer = Utils::ResultComparer.new
       end
 
       def get_jurisdiction_code(name)
@@ -42,7 +45,7 @@ module RegisterSourcesOc
 
       private
 
-      attr_reader :verbose, :services, :comparison_mode
+      attr_reader :verbose, :services, :comparison_mode, :comparer
 
       def try_services
         result = nil
@@ -62,57 +65,7 @@ module RegisterSourcesOc
           break if result && !comparison_mode
         end
 
-        comparison_mode ? compare_results(results) : result
-      end
-
-      def compare_results(results)
-        match_failures = []
-
-        results.each do |service1, response1|
-          results.each do |service2, response2|
-            next unless service1 < service2
-            next unless response1 != response2
-
-            incorrect1 = get_non_matching_fields(response1, response2)
-            incorrect2 = get_non_matching_fields(response2, response1)
-
-            next if incorrect1.empty? && incorrect2.empty?
-
-            match_failures << {
-              service1: service1,
-              response1: incorrect1,
-              service2: service2,
-              response2: incorrect2
-            }
-          end
-        end
-
-        match_failures
-      end
-
-      def get_non_matching_fields(response1, response2)
-        if response1.is_a?(Array) != response2.is_a?(Array)
-          response1
-        elsif response1.is_a?(Array)
-          if response1.empty?
-            {}
-          elsif response2.empty?
-            response1[0][:company]
-          else
-            get_non_matching_fields(response1[0][:company], response2[0][:company])
-          end
-        else
-          response1.keys.map do |k|
-            next if k == :registered_address_country
-            next if response1[k] == response2[k]
-            if (k == :registered_address_in_full)
-              country = response1[:registered_address_country] || response2[:registered_address_country]
-              next if [response1[k].to_s, country].join(', ') == response2[k]
-              next if [response2[k].to_s, country].join(', ') == response1[k]
-            end
-            [k, response1[k]]
-          end.compact.to_h
-        end
+        comparison_mode ? comparer.compare_results(results) : result
       end
     end
   end

@@ -85,7 +85,7 @@ module RegisterSourcesOc
                   must: [
                     # { query_string: { default_field: "name", query: name } }
                     match: {
-                      name: {
+                      "name.raw": {
                         query: name
                       }
                     }
@@ -103,13 +103,20 @@ module RegisterSourcesOc
             index:  {
               _index: index,
               _id: calculate_id(record),
-              _type: 'company',
+              # _type: 'company',
               data: record.to_h
             }
           }
         end
 
-        client.bulk(body: operations)
+        result = client.bulk(body: operations)
+
+        if result['errors']
+          print result, "\n\n"
+          raise 'error'
+        end
+
+        result
       end
 
       private
