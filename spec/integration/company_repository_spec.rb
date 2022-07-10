@@ -1,5 +1,6 @@
 require 'elasticsearch'
 require 'register_sources_oc/repositories/company_repository'
+require 'register_sources_oc/services/es_index_creator'
 require 'register_sources_oc/structs/company'
 
 RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
@@ -14,6 +15,14 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
     )
   end
 
+  before do
+    index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
+      companies_index: index,
+      client: es_client
+    )
+    index_creator.create_index
+  end
+
   describe '#store' do
     it 'stores' do
       records = [
@@ -25,7 +34,8 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
           incorporation_date: '2020-01-09',
           dissolution_date: '2021-09-07',
           restricted_for_marketing: nil,
-          registered_address_in_full: 'registered address'
+          registered_address_in_full: 'registered address',
+          registered_address_country: 'country'
         )
       ]
 

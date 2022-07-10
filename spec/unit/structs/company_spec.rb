@@ -13,7 +13,8 @@ RSpec.describe RegisterSourcesOc::Company do
         incorporation_date: '2020-01-09',
         dissolution_date: '2021-09-07',
         restricted_for_marketing: nil,
-        registered_address_in_full: 'registered address'
+        registered_address_in_full: 'registered address',
+        registered_address_country: 'country',
       }
     end
 
@@ -28,6 +29,7 @@ RSpec.describe RegisterSourcesOc::Company do
       expect(obj.dissolution_date).to eq '2021-09-07'
       expect(obj.restricted_for_marketing).to eq nil
       expect(obj.registered_address_in_full).to eq 'registered address'
+      expect(obj.registered_address_country).to eq 'country'
     end
   end
 end

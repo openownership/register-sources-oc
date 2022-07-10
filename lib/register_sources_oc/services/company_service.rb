@@ -9,14 +9,14 @@ module RegisterSourcesOc
       InconsistentResponseError = Class.new(StandardError)
 
       # services: [ { name: 'bulk', service: bulk_service }, { name: 'oc_api', service: oc_api_service }]
-      def initialize(services: nil, verbose: false, comparison_mode: false)
+      def initialize(services: nil, verbose: false, comparison_mode: false, comparer: nil)
         @services = services || [
           { name: "bulk", service: BulkDataCompanyService.new },
           { name: "api", service: OcApiCompanyService.new }
         ]
         @verbose = verbose
         @comparison_mode = comparison_mode
-        @comparer = Utils::ResultComparer.new
+        @comparer = comparer || Utils::ResultComparer.new
       end
 
       def get_jurisdiction_code(name)

@@ -7,10 +7,9 @@ require 'active_support/core_ext/hash/indifferent_access'
 module RegisterSourcesOc
   module Repositories
     class CompanyRepository
-      DEFAULT_INDEX = 'companies'
       SearchResult = Struct.new(:record, :score)
 
-      def initialize(client: Config::ELASTICSEARCH_CLIENT, index: DEFAULT_INDEX)
+      def initialize(client: Config::ELASTICSEARCH_CLIENT, index: Config::ES_COMPANIES_INDEX)
         @client = client
         @index = index
       end
@@ -83,7 +82,6 @@ module RegisterSourcesOc
               query: {
                 bool: {
                   must: [
-                    # { query_string: { default_field: "name", query: name } }
                     match: {
                       "name.raw": {
                         query: name

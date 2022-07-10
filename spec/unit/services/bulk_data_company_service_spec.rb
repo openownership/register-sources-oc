@@ -126,7 +126,9 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       context 'with results non-empty' do
         it 'returns record of first result' do
           result = subject.search_companies(jurisdiction_code, company_number)
-          expect(result).to eq [{ r1: 'r1' }, { r2: 'r2' }]
+          expect(result).to eq [
+            { company: { r1: 'r1' } }
+          ]
         end
       end
     end
@@ -170,7 +172,9 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       context 'with results non-empty' do
         it 'returns record of first result' do
           result = subject.search_companies_by_name(name)
-          expect(result).to eq [{ r1: 'r1' }, { r2: 'r2' }]
+          expect(result).to eq [
+            { company: { r1: 'r1' } }
+          ]
         end
       end
     end

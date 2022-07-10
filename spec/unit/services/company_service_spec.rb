@@ -39,11 +39,16 @@ RSpec.shared_examples "trying services examples" do |method, args|
     context 'with both results matching' do
       it 'returns result' do
         expected = double 'result'
+        comparer_response = double 'comparer_response'
         expect(service1).to receive(method).with(*args).and_return expected
         expect(service2).to receive(method).with(*args).and_return expected
+        expect(comparer).to receive(:compare_results).with(
+          'service1' => expected,
+          'service2' => expected
+        ).and_return comparer_response
 
         result = subject.send(method, *args)
-        expect(result).to eq []
+        expect(result).to eq comparer_response
       end
     end
 
@@ -51,20 +56,16 @@ RSpec.shared_examples "trying services examples" do |method, args|
       it 'returns result' do
         expected = double 'result'
         expected2 = double 'result2'
+        comparer_response = double 'comparer_response'
         expect(service1).to receive(method).with(*args).and_return expected
         expect(service2).to receive(method).with(*args).and_return expected2
+        expect(comparer).to receive(:compare_results).with(
+          'service1' => expected,
+          'service2' => expected2
+        ).and_return comparer_response
 
         result = subject.send(method, *args)
-        expect(result).to eq(
-          [
-            {
-              service1: 'service1',
-              response1: expected,
-              service2: 'service2',
-              response2: expected2
-            }
-          ]
-        )
+        expect(result).to eq comparer_response
       end
     end
   end
@@ -78,12 +79,14 @@ RSpec.describe RegisterSourcesOc::Services::CompanyService do
         { name: 'service2', service: service2 }
       ],
       verbose: false,
-      comparison_mode: comparison_mode
+      comparison_mode: comparison_mode,
+      comparer: comparer
     )
   end
 
   let(:service1) { double 'service1' }
   let(:service2) { double 'service2' }
+  let(:comparer) { double 'comparer' }
   let(:comparison_mode) { false }
 
   describe '#get_jurisdiction_code' do

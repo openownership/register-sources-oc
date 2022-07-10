@@ -45,8 +45,9 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
               company_type: 'company_type',
               incorporation_date: '1234',
               dissolution_date: '5678',
-              restricted_for_marketing: 'false',
-              registered_address_in_full: 'registered_in_full'
+              restricted_for_marketing: false,
+              registered_address_in_full: 'registered_in_full',
+              registered_address_country: 'registered_country'
             },
             '_score' => 4.5
           }
@@ -67,8 +68,9 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
         expect(record.company_type).to eq 'company_type'
         expect(record.incorporation_date).to eq '1234'
         expect(record.dissolution_date).to eq '5678'
-        expect(record.restricted_for_marketing).to eq 'false'
+        expect(record.restricted_for_marketing).to eq false
         expect(record.registered_address_in_full).to eq 'registered_in_full'
+        expect(record.registered_address_country).to eq 'registered_country'
 
         expect(result.score).to eq 4.5
       end
@@ -102,7 +104,7 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
     end
 
     it 'calls bulk method for es_client' do
-      allow(es_client).to receive(:bulk)
+      allow(es_client).to receive(:bulk).and_return('errors' => nil)
 
       subject.store records
 
@@ -112,7 +114,6 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
             index: {
               _id: "gb1:12345",
               _index: index,
-              _type: "company",
               data: {
                 company_number: 12345,
                 jurisdiction_code: "gb1",
@@ -124,7 +125,6 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
             index: {
               _id: "gb2:12346",
               _index: index,
-              _type: "company",
               data: {
                 company_number: 12346,
                 jurisdiction_code: "gb2",
