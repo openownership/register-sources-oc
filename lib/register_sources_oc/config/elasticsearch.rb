@@ -11,6 +11,9 @@ module RegisterSourcesOc
       transport_options: { ssl: { verify: (ENV.fetch('ELASTICSEARCH_SSL_VERIFY', false) == 'true') } },
       log: false
     )
+
     ES_COMPANIES_INDEX = 'companies'
+    ES_ADD_IDS_INDEX = 'add_ids'
+    ES_ALT_NAMES_INDEX = 'alt_names'
   end
 end
