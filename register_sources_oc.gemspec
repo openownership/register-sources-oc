@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-types', '~> 1.5.1'
   spec.add_dependency 'dry-struct', '~> 1.4.0'
 
-  spec.add_dependency 'elasticsearch', '~> 6.8.3'
+  spec.add_dependency 'elasticsearch', '~> 7.10.1'
 
   spec.add_dependency 'activesupport', '~>6.1.4.1'
   spec.add_dependency 'countries', '~> 4.0.1'
