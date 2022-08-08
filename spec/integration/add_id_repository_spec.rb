@@ -17,7 +17,7 @@ RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
 
   before do
     index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
-      companies_index: index,
+      add_ids_index: index,
       client: es_client
     )
     index_creator.create_add_ids_index

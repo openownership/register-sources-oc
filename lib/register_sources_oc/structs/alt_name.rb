@@ -7,6 +7,8 @@ module RegisterSourcesOc
   end
 
   class AltName < Dry::Struct
+    transform_keys(&:to_sym)
+
     attribute :company_number, Types::String.optional
     attribute :jurisdiction_code, Types::String.optional
     attribute :name, Types::String.optional

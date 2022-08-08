@@ -1,12 +1,12 @@
 require 'register_sources_oc/services/company_service'
 
-RSpec.shared_examples "trying services examples" do |method, args|
+RSpec.shared_examples "trying services examples" do |method, *args, **kwargs|
   context 'when neither service has a result' do
     it 'returns nil' do
-      expect(service1).to receive(method).with(*args).and_return nil
-      expect(service2).to receive(method).with(*args).and_return nil
+      expect(service1).to receive(method).with(*args, **kwargs).and_return nil
+      expect(service2).to receive(method).with(*args, **kwargs).and_return nil
 
-      result = subject.send(method, *args)
+      result = subject.send(method, *args, **kwargs)
       expect(result).to be_nil
     end
   end
@@ -14,10 +14,10 @@ RSpec.shared_examples "trying services examples" do |method, args|
   context 'when first service has a result' do
     it 'returns result' do
       expected = double 'result'
-      expect(service1).to receive(method).with(*args).and_return expected
+      expect(service1).to receive(method).with(*args, **kwargs).and_return expected
       expect(service2).not_to receive(method)
 
-      result = subject.send(method, *args)
+      result = subject.send(method, *args, **kwargs)
       expect(result).to eq expected
     end
   end
@@ -25,10 +25,10 @@ RSpec.shared_examples "trying services examples" do |method, args|
   context 'when first service has no result but second service has a result' do
     it 'returns result' do
       expected = double 'result'
-      expect(service1).to receive(method).with(*args).and_return nil
-      expect(service2).to receive(method).with(*args).and_return expected
+      expect(service1).to receive(method).with(*args, **kwargs).and_return nil
+      expect(service2).to receive(method).with(*args, **kwargs).and_return expected
 
-      result = subject.send(method, *args)
+      result = subject.send(method, *args, **kwargs)
       expect(result).to eq expected
     end
   end
@@ -40,14 +40,14 @@ RSpec.shared_examples "trying services examples" do |method, args|
       it 'returns result' do
         expected = double 'result'
         comparer_response = double 'comparer_response'
-        expect(service1).to receive(method).with(*args).and_return expected
-        expect(service2).to receive(method).with(*args).and_return expected
-        expect(comparer).to receive(:compare_results).with(
+        expect(service1).to receive(method).with(*args, **kwargs).and_return expected
+        expect(service2).to receive(method).with(*args, **kwargs).and_return expected
+        expect(comparer).to receive(:compare_results).with({
           'service1' => expected,
           'service2' => expected
-        ).and_return comparer_response
+        }).and_return comparer_response
 
-        result = subject.send(method, *args)
+        result = subject.send(method, *args, **kwargs)
         expect(result).to eq comparer_response
       end
     end
@@ -57,14 +57,14 @@ RSpec.shared_examples "trying services examples" do |method, args|
         expected = double 'result'
         expected2 = double 'result2'
         comparer_response = double 'comparer_response'
-        expect(service1).to receive(method).with(*args).and_return expected
-        expect(service2).to receive(method).with(*args).and_return expected2
-        expect(comparer).to receive(:compare_results).with(
+        expect(service1).to receive(method).with(*args, **kwargs).and_return expected
+        expect(service2).to receive(method).with(*args, **kwargs).and_return expected2
+        expect(comparer).to receive(:compare_results).with({
           'service1' => expected,
           'service2' => expected2
-        ).and_return comparer_response
+        }).and_return comparer_response
 
-        result = subject.send(method, *args)
+        result = subject.send(method, *args, **kwargs)
         expect(result).to eq comparer_response
       end
     end
@@ -96,16 +96,16 @@ RSpec.describe RegisterSourcesOc::Services::CompanyService do
 
   describe '#get_company' do
     include_examples "trying services examples",
-      :get_company, ['jurisdiction_code', 'company_number', { sparse: true }]
+      :get_company, 'jurisdiction_code', 'company_number', sparse: true
   end
 
   describe '#search_companies' do
     include_examples "trying services examples",
-      :search_companies, ['jurisdiction_code', 'company_number']
+      :search_companies, 'jurisdiction_code', 'company_number'
   end
 
   describe '#search_companies_by_name' do
     include_examples "trying services examples",
-      :search_companies_by_name, ['name']
+      :search_companies_by_name, 'name'
   end
 end

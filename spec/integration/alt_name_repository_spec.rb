@@ -17,7 +17,7 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
 
   before do
     index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
-      companies_index: index,
+      alt_names_index: index,
       client: es_client
     )
     index_creator.create_alt_names_index
