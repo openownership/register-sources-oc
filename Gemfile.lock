@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     register_sources_oc (0.1.0)
-      activesupport (~> 6.1.4.1)
+      activesupport (~> 6.1)
       countries (~> 4.0.1)
       dotenv
       dry-struct (~> 1.4.0)

@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'elasticsearch', '~> 7.10.1'
 
-  spec.add_dependency 'activesupport', '~>6.1.4.1'
+  spec.add_dependency 'activesupport', '~> 6.1'
   spec.add_dependency 'countries', '~> 4.0.1'
   spec.add_dependency 'iso8601'
   spec.add_dependency 'rexml'
