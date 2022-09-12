@@ -13,6 +13,7 @@ module RegisterSourcesOc
     transform_keys(&:to_sym)
 
     attribute :resolved, Types::Nominal::Bool.default(false)
+    attribute? :jurisdiction_code, Types::String
     attribute? :reconciliation_response, ReconciliationResponse.optional
     attribute? :company, Company.optional
   end

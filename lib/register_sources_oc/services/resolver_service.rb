@@ -16,9 +16,16 @@ module RegisterSourcesOc
       end
 
       def resolve(request)
+        # TODO: @opencorporates_client.get_jurisdiction_code(country)
         jurisdiction_code = request.jurisdiction_code
 
-        return ResolverResponse.new(resolved: false, reconciliation_response: nil) unless jurisdiction_code
+        unless jurisdiction_code
+          country = request.country
+          return ResolverResponse.new(resolved: false) unless country
+          jurisdiction_code = company_service.get_jurisdiction_code(country)
+        end
+
+        return ResolverResponse.new(resolved: false) unless jurisdiction_code
 
         company = nil
         company_number = request.company_number
@@ -28,7 +35,7 @@ module RegisterSourcesOc
         unless company_number
           reconciliation_response = reconcile(request)
 
-          return ResolverResponse.new(resolved: false, reconciliation_response: nil) unless reconciliation_response.reconciled
+          return ResolverResponse.new(resolved: false, jurisdiction_code: jurisdiction_code) unless reconciliation_response.reconciled
 
           company_number = reconciliation_response.company_number
         end
@@ -44,11 +51,12 @@ module RegisterSourcesOc
           end
         end
 
-        ResolverResponse.new(
+        ResolverResponse[{
           resolved: !company.nil?,
+          jurisdiction_code: jurisdiction_code,
           reconciliation_response: reconciliation_response,
           company: company
-        )
+        }.compact]
       end
 
       private

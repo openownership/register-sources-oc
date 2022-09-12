@@ -9,9 +9,9 @@ module RegisterSourcesOc
   class ResolverRequest < Dry::Struct
     transform_keys(&:to_sym)
 
-    attribute :jurisdiction_code, Types::String.optional
-    attribute :company_number, Types::String.optional
-    attribute :country, Types::String.optional
-    attribute :name, Types::String.optional
+    attribute? :jurisdiction_code, Types::String
+    attribute? :company_number, Types::String
+    attribute? :country, Types::String
+    attribute? :name, Types::String
   end
 end

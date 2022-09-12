@@ -32,24 +32,51 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
     let(:country) { 'country' }
 
     let(:resolver_request) do
-      RegisterSourcesOc::ResolverRequest.new(
+      RegisterSourcesOc::ResolverRequest[{
         jurisdiction_code: jurisdiction_code,
         company_number: company_number,
         name: name,
         country: country,
-      )
+      }.compact]
     end
 
     context 'when jurisdiction_code is nil' do
       let(:jurisdiction_code) { nil }
 
-      it 'retuns response with reconciled false' do
-        result = subject.resolve(resolver_request)
+      context 'with country existing' do
+        let(:fetched_jurisdiction_code) { 'fetched_code' }
+        
+        before do
+          expect(company_service).to receive(:get_jurisdiction_code).with(country).and_return(
+            fetched_jurisdiction_code
+          )
+          expect(company_service).to receive(:get_company).and_return company
+        end
 
-        expect(result).to be_a RegisterSourcesOc::ResolverResponse
-        expect(result.reconciliation_response).to be_nil
-        expect(result.resolved).to be false
-        expect(result.company).to be_nil
+        it 'returns resolved record' do
+          result = subject.resolve(resolver_request)
+  
+          expect(result).to be_a RegisterSourcesOc::ResolverResponse
+          expect(result.reconciliation_response).to be_nil
+          expect(result.resolved).to be true
+          expect(result.company).to eq company
+        end
+      end
+
+      context 'with country not matching a jurisdiction code' do
+        before do
+          expect(company_service).to receive(:get_jurisdiction_code).with(country).and_return nil
+          expect(company_service).not_to receive(:get_company)
+        end
+
+        it 'retuns response with reconciled false' do
+          result = subject.resolve(resolver_request)
+
+          expect(result).to be_a RegisterSourcesOc::ResolverResponse
+          expect(result.reconciliation_response).to be_nil
+          expect(result.resolved).to be false
+          expect(result.company).to be_nil
+        end
       end
     end
 
