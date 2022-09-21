@@ -5,7 +5,7 @@ require 'register_sources_oc/clients/open_corporate_client'
 module RegisterSourcesOc
   module Services
     class OcApiCompanyService
-      FIELDS = [:company_number, :jurisdiction_code, :name, :company_type, :incorporation_date, :dissolution_date, :restricted_for_marketing, :registered_address_in_full]
+      FIELDS = [:company_number, :jurisdiction_code, :name, :company_type, :incorporation_date, :dissolution_date, :restricted_for_marketing, :registered_address_in_full, :registered_address_country]
 
       extend Forwardable
 

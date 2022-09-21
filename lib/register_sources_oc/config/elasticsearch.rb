@@ -4,11 +4,11 @@ module RegisterSourcesOc
   module Config
     MissingEsCredsError = Class.new(StandardError)
 
-    raise MissingEsCredsError unless ENV['ELASTICSEARCH_HOST']
+    raise MissingEsCredsError unless ENV['OC_ELASTICSEARCH_HOST']
 
     ELASTICSEARCH_CLIENT = Elasticsearch::Client.new(
-      host: "#{ENV.fetch('ELASTICSEARCH_PROTOCOL', 'http')}://elastic:#{ENV['ELASTICSEARCH_PASSWORD']}@#{ENV['ELASTICSEARCH_HOST']}:#{ENV['ELASTICSEARCH_PORT']}",
-      transport_options: { ssl: { verify: (ENV.fetch('ELASTICSEARCH_SSL_VERIFY', false) == 'true') } },
+      host: "#{ENV.fetch('OC_ELASTICSEARCH_PROTOCOL', 'http')}://elastic:#{ENV['OC_ELASTICSEARCH_PASSWORD']}@#{ENV['OC_ELASTICSEARCH_HOST']}:#{ENV['OC_ELASTICSEARCH_PORT']}",
+      transport_options: { ssl: { verify: (ENV.fetch('OC_ELASTICSEARCH_SSL_VERIFY', false) == 'true') } },
       log: false
     )
 

@@ -16,7 +16,6 @@ module RegisterSourcesOc
       end
 
       def resolve(request)
-        # TODO: @opencorporates_client.get_jurisdiction_code(country)
         jurisdiction_code = request.jurisdiction_code
 
         unless jurisdiction_code
