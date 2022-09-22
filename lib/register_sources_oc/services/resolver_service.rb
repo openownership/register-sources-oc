@@ -53,6 +53,7 @@ module RegisterSourcesOc
         ResolverResponse[{
           resolved: !company.nil?,
           jurisdiction_code: jurisdiction_code,
+          company_number: company_number,
           reconciliation_response: reconciliation_response,
           company: company
         }.compact]

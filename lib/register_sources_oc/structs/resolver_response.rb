@@ -14,6 +14,7 @@ module RegisterSourcesOc
 
     attribute :resolved, Types::Nominal::Bool.default(false)
     attribute? :jurisdiction_code, Types::String
+    attribute? :company_number, Types::String
     attribute? :reconciliation_response, ReconciliationResponse.optional
     attribute? :company, Company.optional
   end
