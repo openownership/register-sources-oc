@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
+docker-compose build register_sources_unittests
 docker-compose run --rm register_sources_unittests

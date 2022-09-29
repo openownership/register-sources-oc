@@ -13,6 +13,7 @@ RSpec.describe RegisterSourcesOc::Services::OcApiCompanyService do
       company_type: 'a4',
       incorporation_date: 'a5',
       dissolution_date: 'a6',
+      registered_address_country: nil,
       restricted_for_marketing: 'a7',
       registered_address_in_full: 'a8'
     }
