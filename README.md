@@ -2,7 +2,7 @@
 
 Register Sources OC is designed for inclusion as a library for use with Open Corporates Bulk Data and API.
 
-There are two primary purposes for this library:
+There are four primary purposes for this library:
 
 - Provides a client to the Open Corporates API
 - Providing typed objects for the Open Corporates data. It makes use of the dry-types and dry-struct gems to specify the different object types allowed in the data returned.
