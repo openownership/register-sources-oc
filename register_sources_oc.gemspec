@@ -29,17 +29,17 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'dotenv'
 
-  spec.add_dependency 'dry-types', '~> 1.5.1'
-  spec.add_dependency 'dry-struct', '~> 1.4.0'
+  spec.add_dependency 'dry-types', '>= 1', '< 2'
+  spec.add_dependency 'dry-struct', '>= 1', '< 2'
 
-  spec.add_dependency 'elasticsearch', '~> 7.10.1'
+  spec.add_dependency 'elasticsearch', '>= 7.10', '< 8'
 
-  spec.add_dependency 'activesupport', '~> 6.1'
-  spec.add_dependency 'countries', '~> 4.0.1'
+  spec.add_dependency 'activesupport', '>= 6', '< 8'
+  spec.add_dependency 'countries', '>= 4', '< 5'
   spec.add_dependency 'iso8601'
   spec.add_dependency 'rexml'
 
-  spec.add_dependency 'faraday', '1.9.3'
-  spec.add_dependency 'faraday_middleware', '~> 1.0'
-  spec.add_dependency 'net-http-persistent', '~> 4.0.1'
+  spec.add_dependency 'faraday', '>= 1', '< 2'
+  spec.add_dependency 'faraday_middleware', '>= 1', '< 2'
+  spec.add_dependency 'net-http-persistent'
 end
