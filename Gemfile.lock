@@ -2,16 +2,16 @@ PATH
   remote: .
   specs:
     register_sources_oc (0.1.0)
-      activesupport (~> 6.1)
-      countries (~> 4.0.1)
+      activesupport (>= 6, < 8)
+      countries (>= 4, < 5)
       dotenv
-      dry-struct (~> 1.4.0)
-      dry-types (~> 1.5.1)
-      elasticsearch (~> 7.10.1)
-      faraday (= 1.9.3)
-      faraday_middleware (~> 1.0)
+      dry-struct (>= 1, < 2)
+      dry-types (>= 1, < 2)
+      elasticsearch (>= 7.10, < 8)
+      faraday (>= 1, < 2)
+      faraday_middleware (>= 1, < 2)
       iso8601
-      net-http-persistent (~> 4.0.1)
+      net-http-persistent
       rexml
 
 GEM
