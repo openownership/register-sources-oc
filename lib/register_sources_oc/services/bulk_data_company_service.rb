@@ -21,7 +21,8 @@ module RegisterSourcesOc
       end
 
       def get_company(jurisdiction_code, company_number, sparse: true)
-        return unless repository_enabled
+        return unless repository_enabled && jurisdiction_code
+        jurisdiction_code = jurisdiction_code.downcase
         return unless should_try_jurisdiction?(jurisdiction_code)
 
         results = company_repository.get(
@@ -37,7 +38,8 @@ module RegisterSourcesOc
       end
 
       def search_companies(jurisdiction_code, company_number)
-        return unless repository_enabled
+        return unless repository_enabled && jurisdiction_code
+        jurisdiction_code = jurisdiction_code.downcase
         return unless should_try_jurisdiction?(jurisdiction_code)
 
         results = company_repository.search_by_number(
@@ -71,7 +73,7 @@ module RegisterSourcesOc
       attr_reader :company_repository, :jurisdiction_codes, :repository_enabled
 
       def should_try_jurisdiction?(jurisdiction_code)
-        jurisdiction_codes.include? jurisdiction_code.downcase
+        jurisdiction_codes.include? jurisdiction_code
       end
     end
   end

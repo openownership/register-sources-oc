@@ -59,6 +59,13 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
         ).and_return results
       end
 
+      context 'with jurisdiction_code the upper-case of a valid jurisdiction' do
+        it 'returns record of first result' do
+          result = subject.get_company('GB', company_number, sparse: sparse)
+          expect(result).to eq({ r1: 'r1' })
+        end
+      end
+
       context 'with results empty' do
         let(:results) { [] }
 
