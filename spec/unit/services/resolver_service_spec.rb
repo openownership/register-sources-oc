@@ -5,12 +5,15 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
   subject do
     described_class.new(
       company_service: company_service,
-      reconciliation_service: reconciliation_service
+      reconciliation_service: reconciliation_service,
+      jurisdiction_code_service: jurisdiction_code_service
     )
   end
 
   let(:company_service) { double 'company_service' }
   let(:reconciliation_service) { double 'reconciliation_service' }
+  let(:jurisdiction_code_service) { double 'jurisdiction_code_service' }
+
   let(:company) do
     RegisterSourcesOc::Company.new(
       company_number: '123456',
@@ -30,6 +33,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
     let(:company_number) { '123456' }
     let(:name) { 'company_name' }
     let(:country) { 'country' }
+    let(:region) { nil }
 
     let(:resolver_request) do
       RegisterSourcesOc::ResolverRequest[{
@@ -37,6 +41,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         company_number: company_number,
         name: name,
         country: country,
+        region: region
       }.compact]
     end
 
@@ -47,9 +52,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         let(:fetched_jurisdiction_code) { 'fetched_code' }
         
         before do
-          expect(company_service).to receive(:get_jurisdiction_code).with(country).and_return(
-            fetched_jurisdiction_code
-          )
+          expect(jurisdiction_code_service).to receive(:get_jurisdiction_code).with(country, region: nil).and_return 'ca'
           expect(company_service).to receive(:get_company).and_return company
         end
 
@@ -57,6 +60,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           result = subject.resolve(resolver_request)
   
           expect(result).to be_a RegisterSourcesOc::ResolverResponse
+          expect(result.jurisdiction_code).to eq 'ca'
           expect(result.reconciliation_response).to be_nil
           expect(result.resolved).to be true
           expect(result.company).to eq company
@@ -65,17 +69,37 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
 
       context 'with country not matching a jurisdiction code' do
         before do
-          expect(company_service).to receive(:get_jurisdiction_code).with(country).and_return nil
           expect(company_service).not_to receive(:get_company)
+          expect(jurisdiction_code_service).to receive(:get_jurisdiction_code).with(country, region: nil).and_return nil
         end
 
         it 'retuns response with reconciled false' do
           result = subject.resolve(resolver_request)
 
           expect(result).to be_a RegisterSourcesOc::ResolverResponse
+          expect(result.jurisdiction_code).to be_nil
           expect(result.reconciliation_response).to be_nil
           expect(result.resolved).to be false
           expect(result.company).to be_nil
+        end
+      end
+
+      context 'with country and region' do
+        let(:region) { 'region' }
+
+        before do
+          expect(jurisdiction_code_service).to receive(:get_jurisdiction_code).with(country, region: region).and_return 'ca'
+          expect(company_service).to receive(:get_company).and_return company
+        end
+
+        it 'retuns response with reconciled false' do
+          result = subject.resolve(resolver_request)
+
+          expect(result).to be_a RegisterSourcesOc::ResolverResponse
+          expect(result.jurisdiction_code).to eq 'ca'
+          expect(result.reconciliation_response).to be_nil
+          expect(result.resolved).to be true
+          expect(result.company).to eq company
         end
       end
     end

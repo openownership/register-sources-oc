@@ -1,5 +1,7 @@
 require 'register_sources_oc/services/company_service'
 require 'register_sources_oc/services/reconciliation_service'
+require 'register_sources_oc/services/jurisdiction_code_service'
+
 require 'register_sources_oc/structs/resolver_request'
 require 'register_sources_oc/structs/resolver_response'
 require 'register_sources_oc/structs/reconciliation_request'
@@ -9,10 +11,12 @@ module RegisterSourcesOc
     class ResolverService
       def initialize(
         company_service: CompanyService.new,
-        reconciliation_service: ReconciliationService.new
+        reconciliation_service: ReconciliationService.new,
+        jurisdiction_code_service: JurisdictionCodeService.new
       )
         @company_service = company_service
         @reconciliation_service = reconciliation_service
+        @jurisdiction_code_service = jurisdiction_code_service
       end
 
       def resolve(request)
@@ -21,7 +25,7 @@ module RegisterSourcesOc
         unless jurisdiction_code
           country = request.country
           return ResolverResponse.new(resolved: false) unless country
-          jurisdiction_code = company_service.get_jurisdiction_code(country)
+          jurisdiction_code = jurisdiction_code_service.get_jurisdiction_code(country, region: request.region)
         end
 
         return ResolverResponse.new(resolved: false) unless jurisdiction_code
@@ -61,7 +65,7 @@ module RegisterSourcesOc
 
       private
 
-      attr_reader :company_service, :reconciliation_service
+      attr_reader :company_service, :reconciliation_service, :jurisdiction_code_service
 
       def reconcile(request)
         reconciliation_service.reconcile(

@@ -10,6 +10,7 @@ PATH
       elasticsearch (>= 7.10, < 8)
       faraday (>= 1, < 2)
       faraday_middleware (>= 1, < 2)
+      geokit (>= 1, < 2)
       iso8601
       net-http-persistent
       rexml
@@ -85,6 +86,7 @@ GEM
     faraday-retry (1.0.3)
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
+    geokit (1.13.1)
     hashdiff (1.0.1)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
