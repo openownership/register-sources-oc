@@ -25,7 +25,7 @@ module RegisterSourcesOc
         unless jurisdiction_code
           country = request.country
           return ResolverResponse.new(resolved: false) unless country
-          jurisdiction_code = jurisdiction_code_service.get_jurisdiction_code(country, region: request.region)
+          jurisdiction_code = jurisdiction_code_service.query_jurisdiction(country, region: request.region)
         end
 
         return ResolverResponse.new(resolved: false) unless jurisdiction_code
