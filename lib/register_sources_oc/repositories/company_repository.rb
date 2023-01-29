@@ -45,6 +45,10 @@ module RegisterSourcesOc
       end
 
       def get_many(requests)
+        requests = requests.select { |request| request.company_number && request.jurisdiction_code }
+
+        return [] if requests.empty?
+
         process_results(
           client.search(
             index: index,

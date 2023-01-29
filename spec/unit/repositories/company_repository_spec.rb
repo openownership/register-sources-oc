@@ -1,3 +1,4 @@
+require 'ostruct'
 require 'register_sources_oc/repositories/company_repository'
 
 RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
@@ -81,6 +82,92 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
 
       it 'searches elasticsearch and returns empty results' do
         results = subject.get(jurisdiction_code: jurisdiction_code, company_number: company_number)
+
+        expect(results).to eq []
+      end
+    end
+  end
+
+  describe '#get_many' do
+    let(:jurisdiction_code) { 'gb' }
+    let(:company_number) { 123456 }
+
+    let(:hits) { [] }
+    let(:results) { { 'hits' => { 'hits' => hits } } }
+
+    let(:query_body) {
+      {
+        query: {
+          bool: {
+            should: [
+              {
+                bool: {
+                  must: [
+                    { match: { company_number: { query: 123456 }}},
+                    { match: { jurisdiction_code: { query: "gb" }}}
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+
+    before do
+      expect(es_client).to receive(:search).with(
+        index: index,
+        body: query_body
+      ).and_return results
+    end
+  
+    context 'when has results' do
+      let(:hits) do
+        [
+          {
+            '_source' => {
+              company_number: '123456',
+              jurisdiction_code: 'gb',
+              name: 'name',
+              company_type: 'company_type',
+              incorporation_date: '1234',
+              dissolution_date: '5678',
+              restricted_for_marketing: false,
+              registered_address_in_full: 'registered_in_full',
+              registered_address_country: 'registered_country'
+            },
+            '_score' => 4.5
+          }
+        ]
+      end
+
+      it 'searches elasticsearch' do
+        results = subject.get_many([OpenStruct.new(jurisdiction_code: jurisdiction_code, company_number: company_number)])
+
+        expect(results.length).to eq 1
+        result = results.first
+        record = result.record
+        expect(record).to be_a RegisterSourcesOc::Company
+
+        expect(record.company_number).to eq '123456'
+        expect(record.jurisdiction_code).to eq 'gb'
+        expect(record.name).to eq 'name'
+        expect(record.company_type).to eq 'company_type'
+        expect(record.incorporation_date).to eq '1234'
+        expect(record.dissolution_date).to eq '5678'
+        expect(record.restricted_for_marketing).to eq false
+        expect(record.registered_address_in_full).to eq 'registered_in_full'
+        expect(record.registered_address_country).to eq 'registered_country'
+
+        expect(result.score).to eq 4.5
+      end
+    end
+  
+    context 'when has empty results' do
+      let(:hits) { [] }
+
+      it 'searches elasticsearch and returns empty results' do
+        results = subject.get_many([OpenStruct.new(jurisdiction_code: jurisdiction_code, company_number: company_number)])
 
         expect(results).to eq []
       end
