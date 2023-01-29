@@ -52,7 +52,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         let(:fetched_jurisdiction_code) { 'fetched_code' }
         
         before do
-          expect(jurisdiction_code_service).to receive(:get_jurisdiction_code).with(country, region: nil).and_return 'ca'
+          expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region: nil).and_return 'ca'
           expect(company_service).to receive(:get_company).and_return company
         end
 
@@ -70,7 +70,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       context 'with country not matching a jurisdiction code' do
         before do
           expect(company_service).not_to receive(:get_company)
-          expect(jurisdiction_code_service).to receive(:get_jurisdiction_code).with(country, region: nil).and_return nil
+          expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region: nil).and_return nil
         end
 
         it 'retuns response with reconciled false' do
@@ -88,7 +88,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         let(:region) { 'region' }
 
         before do
-          expect(jurisdiction_code_service).to receive(:get_jurisdiction_code).with(country, region: region).and_return 'ca'
+          expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region: region).and_return 'ca'
           expect(company_service).to receive(:get_company).and_return company
         end
 
