@@ -27,7 +27,7 @@ module RegisterSourcesOc
         requests = requests.map do |request|
           next unless request.jurisdiction_code && request.company_number
 
-          jurisdiction_code = jurisdiction_code.downcase
+          jurisdiction_code = request.jurisdiction_code.downcase
           next unless should_try_jurisdiction?(jurisdiction_code)
 
           OpenStruct.new(jurisdiction_code: jurisdiction_code, company_number: request.company_number)
