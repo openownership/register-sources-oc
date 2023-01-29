@@ -19,8 +19,28 @@ module RegisterSourcesOc
         @jurisdiction_code_service = jurisdiction_code_service
       end
 
-      def get_many_companies(requests)
-        
+      def resolve_many(requests)
+        initial_companies = company_service.get_companies(requests) || []
+
+        other_results = requests.map do |request|
+          next if initial_companies.find do |c|
+            (c[:company_number] == request.company_number) && (c[:jurisdiction_code].downcase == request.jurisdiction_code.downcase)
+          end
+
+          resolve(request)
+        end
+
+        initial_results = initial_companies.map do |c|
+          ResolverResponse[{
+            resolved: true,
+            jurisdiction_code: c.jurisdiction_code,
+            company_number: c.company_number,
+            reconciliation_response: nil,
+            company: c.to_h
+          }.compact]
+        end
+
+        initial_results + other_results
       end
 
       def resolve(request)

@@ -15,6 +15,10 @@ module RegisterSourcesOc
         @open_corporate_client = open_corporate_client
       end
 
+      def get_companies(requests)
+        nil # bulk requests not implemented
+      end
+
       def get_company(jurisdiction_code, company_number, sparse: true)
         result = open_corporate_client.get_company(jurisdiction_code, company_number, sparse: sparse)
         map_result result

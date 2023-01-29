@@ -1,4 +1,5 @@
 require 'elasticsearch'
+require 'ostruct'
 require 'register_sources_oc/repositories/company_repository'
 
 module RegisterSourcesOc
@@ -18,6 +19,23 @@ module RegisterSourcesOc
 
       def get_jurisdiction_code(name)
         nil # not supported - fall through
+      end
+
+      def get_companies(requests)
+        return unless repository_enabled
+
+        requests = requests.map do |request|
+          next unless request.jurisdiction_code && request.company_number
+
+          jurisdiction_code = jurisdiction_code.downcase
+          next unless should_try_jurisdiction?(jurisdiction_code)
+
+          OpenStruct.new(jurisdiction_code: jurisdiction_code, company_number: request.company_number)
+        end.compact
+
+        company_repository.get_many(requests).compact.map(&:record)
+      rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+        nil # fall through to next service
       end
 
       def get_company(jurisdiction_code, company_number, sparse: true)

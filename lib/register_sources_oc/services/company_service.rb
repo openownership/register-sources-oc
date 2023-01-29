@@ -25,6 +25,12 @@ module RegisterSourcesOc
         end
       end
 
+      def get_companies(requests)
+        try_services do |service|
+          service.get_companies(name)
+        end
+      end
+
       def get_company(jurisdiction_code, company_number, sparse: true)
         try_services do |service|
           service.get_company(jurisdiction_code, company_number, sparse: sparse)
