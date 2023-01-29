@@ -27,7 +27,7 @@ module RegisterSourcesOc
 
       def get_companies(requests)
         try_services do |service|
-          service.get_companies(name)
+          service.get_companies(requests)
         end
       end
 
