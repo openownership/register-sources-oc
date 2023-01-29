@@ -28,7 +28,7 @@ module RegisterSourcesOc
           end
 
           resolve(request)
-        end
+        end.compact
 
         initial_results = initial_companies.map do |c|
           ResolverResponse[{
