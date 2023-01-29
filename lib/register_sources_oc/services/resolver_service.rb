@@ -19,6 +19,10 @@ module RegisterSourcesOc
         @jurisdiction_code_service = jurisdiction_code_service
       end
 
+      def get_many_companies(requests)
+        
+      end
+
       def resolve(request)
         jurisdiction_code = request.jurisdiction_code
 

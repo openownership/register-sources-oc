@@ -44,6 +44,42 @@ module RegisterSourcesOc
         )
       end
 
+      def get_many(requests)
+        process_results(
+          client.search(
+            index: index,
+            body: {
+              query: {
+                bool: {
+                  should: requests.map { |request|
+                    {
+                      bool: {
+                        must: [
+                          {
+                            match: {
+                              company_number: {
+                                query: request.company_number
+                              }
+                            }
+                          },
+                          {
+                            match: {
+                              jurisdiction_code: {
+                                query: request.jurisdiction_code
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          )
+        )
+      end
+
       def search_by_number(jurisdiction_code:, company_number:)
         process_results(
           client.search(
