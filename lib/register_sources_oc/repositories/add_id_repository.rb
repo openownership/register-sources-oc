@@ -17,7 +17,7 @@ module RegisterSourcesOc
       def search_by_number(jurisdiction_code:, company_number:)
         process_results(
           client.search(
-            index: index,
+            index:,
             body: {
               query: {
                 bool: {
@@ -25,33 +25,33 @@ module RegisterSourcesOc
                     {
                       match: {
                         company_number: {
-                          query: company_number
-                        }
-                      }
+                          query: company_number,
+                        },
+                      },
                     },
                     {
                       match: {
                         jurisdiction_code: {
-                          query: jurisdiction_code
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          )
+                          query: jurisdiction_code,
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          ),
         )
       end
 
       def store(records)
         operations = records.map do |record|
           {
-            index:  {
+            index: {
               _index: index,
               _id: calculate_id(record),
-              data: record.to_h
-            }
+              data: record.to_h,
+            },
           }
         end
 
@@ -83,7 +83,7 @@ module RegisterSourcesOc
 
           SearchResult.new(
             AddId.new(**source),
-            hit['_score']
+            hit['_score'],
           )
         end
 

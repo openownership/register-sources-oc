@@ -1,4 +1,3 @@
-
 require 'register_sources_oc/clients/open_corporate_client'
 require 'register_sources_oc/clients/google_geocoder_client'
 
@@ -12,11 +11,11 @@ module RegisterSourcesOc
       end
 
       def query_jurisdiction(country, region: nil)
-        cache_key = "#{country}:#{region.to_s}"
+        cache_key = "#{country}:#{region}"
 
         return cache[cache_key] if cache[cache_key]
 
-        cache[cache_key] = query_jurisdiction_no_cache(country, region: region)
+        cache[cache_key] = query_jurisdiction_no_cache(country, region:)
       end
 
       def clear_cache

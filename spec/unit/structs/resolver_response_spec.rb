@@ -23,7 +23,7 @@ RSpec.describe RegisterSourcesOc::ResolverResponse do
           restricted_for_marketing: nil,
           registered_address_in_full: 'registered address',
           registered_address_country: 'country',
-        }
+        },
       }
     end
 

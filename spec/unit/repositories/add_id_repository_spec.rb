@@ -1,7 +1,7 @@
 require 'register_sources_oc/repositories/add_id_repository'
 
 RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
-  subject { described_class.new(client: es_client, index: index) }
+  subject { described_class.new(client: es_client, index:) }
 
   let(:es_client) { double 'es_client' }
   let(:index) { double 'index' }
@@ -9,28 +9,28 @@ RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
 
   describe '#search_by_number' do
     let(:jurisdiction_code) { 'gb' }
-    let(:company_number) { 123456 }
+    let(:company_number) { 123_456 }
 
     let(:hits) { [] }
     let(:results) { { 'hits' => { 'hits' => hits } } }
 
-    let(:query_body) {
+    let(:query_body) do
       {
         query: {
           bool: {
             must: [
-              { match: { company_number: { query: 123456 }}},
-              { match: { jurisdiction_code: { query: "gb" }}}
-            ]
-          }
-        }
+              { match: { company_number: { query: 123_456 } } },
+              { match: { jurisdiction_code: { query: "gb" } } },
+            ],
+          },
+        },
       }
-    }
+    end
 
     before do
       expect(es_client).to receive(:search).with(
-        index: index,
-        body: query_body
+        index:,
+        body: query_body,
       ).and_return results
     end
 
@@ -42,17 +42,17 @@ RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
               company_number: '123456',
               jurisdiction_code: 'gb',
               uid: 'uid',
-              identifier_system_code: 'identifier_system_code'
+              identifier_system_code: 'identifier_system_code',
             },
-            '_score' => 4.5
-          }
+            '_score' => 4.5,
+          },
         ]
       end
 
       it 'searches elasticsearch' do
         results = subject.search_by_number(
-          jurisdiction_code: jurisdiction_code,
-          company_number: company_number
+          jurisdiction_code:,
+          company_number:,
         )
 
         expect(results.length).to eq 1
@@ -74,8 +74,8 @@ RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
 
       it 'searches elasticsearch and returns empty results' do
         results = subject.search_by_number(
-          jurisdiction_code: jurisdiction_code,
-          company_number: company_number
+          jurisdiction_code:,
+          company_number:,
         )
 
         expect(results).to eq []
@@ -86,8 +86,8 @@ RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
   describe '#store' do
     let(:records) do
       [
-        fake_record_struct.new('gb1', 12345, 's1'),
-        fake_record_struct.new('gb2', 12346, 's2'),
+        fake_record_struct.new('gb1', 12_345, 's1'),
+        fake_record_struct.new('gb2', 12_346, 's2'),
       ]
     end
 
@@ -103,24 +103,24 @@ RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
               _id: "gb1:12345:EMZsjw5KCNXDM3AyiNg2tKnVMPx38Yaa",
               _index: index,
               data: {
-                company_number: 12345,
+                company_number: 12_345,
                 jurisdiction_code: "gb1",
-                something: 's1'
-              }
-            }
+                something: 's1',
+              },
+            },
           },
           {
             index: {
               _id: "gb2:12346:S9tVgUGFPq4KPo7UrcYPVZ/wa2LqcsGQ",
               _index: index,
               data: {
-                company_number: 12346,
+                company_number: 12_346,
                 jurisdiction_code: "gb2",
-                something: 's2'
-              }
-            }
-          }
-        ]
+                something: 's2',
+              },
+            },
+          },
+        ],
       )
     end
   end

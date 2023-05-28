@@ -9,7 +9,7 @@ require 'active_support'
 module RegisterSourcesOc
   module Clients
     class OpenCorporateClient
-      API_VERSION = 'v0.4.6'
+      API_VERSION = 'v0.4.6'.freeze
       CACHE_EXPIRY_SECS = 60 * 60 * 24 * 31 # 31.days.to_i
 
       class TimeoutError < StandardError
@@ -17,9 +17,9 @@ module RegisterSourcesOc
 
       def self.new_for_imports
         new(
-          api_token:      ENV.fetch('OC_API_TOKEN_PROTECTED'),
-          open_timeout:   30.0,
-          read_timeout:   60.0,
+          api_token: ENV.fetch('OC_API_TOKEN_PROTECTED'),
+          open_timeout: 30.0,
+          read_timeout: 60.0,
           enable_retries: true,
           raise_timeouts: false,
         )
@@ -27,9 +27,9 @@ module RegisterSourcesOc
 
       def self.new_for_app(timeout:)
         new(
-          api_token:      ENV.fetch('OC_API_TOKEN'),
-          open_timeout:   timeout,
-          read_timeout:   timeout,
+          api_token: ENV.fetch('OC_API_TOKEN'),
+          open_timeout: timeout,
+          read_timeout: timeout,
           enable_retries: false,
           raise_timeouts: true,
         )
@@ -62,7 +62,7 @@ module RegisterSourcesOc
                         Net::OpenTimeout,
                         'Timeout::Error',
                         Faraday::RetriableResponse,
-                        Faraday::TimeoutError
+                        Faraday::TimeoutError,
                       ]
           end
 
@@ -97,10 +97,10 @@ module RegisterSourcesOc
 
       def search_companies(jurisdiction_code, company_number)
         params = {
-          q:                 company_number,
-          jurisdiction_code: jurisdiction_code,
-          fields:            'company_number',
-          order:             'score',
+          q: company_number,
+          jurisdiction_code:,
+          fields: 'company_number',
+          order: 'score',
         }
 
         response = get('/companies/search', params)
@@ -112,9 +112,9 @@ module RegisterSourcesOc
 
       def search_companies_by_name(name)
         params = {
-          q:      name,
+          q: name,
           fields: 'company_name',
-          order:  'score',
+          order: 'score',
         }
 
         response = get('/companies/search', params)

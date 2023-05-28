@@ -3,14 +3,14 @@ require 'register_sources_oc/services/bulk_data_company_service'
 RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
   subject do
     described_class.new(
-      company_repository: company_repository,
-      jurisdiction_codes: jurisdiction_codes,
-      repository_enabled: repository_enabled
+      company_repository:,
+      jurisdiction_codes:,
+      repository_enabled:,
     )
   end
 
   let(:company_repository) { double 'company_repository' }
-  let(:jurisdiction_codes) { ['gb', 'fr'] }
+  let(:jurisdiction_codes) { %w[gb fr] }
   let(:repository_enabled) { true }
 
   describe '#get_jurisdiction_code' do
@@ -30,7 +30,7 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       let(:repository_enabled) { false }
 
       it 'returns nil' do
-        result = subject.get_company(jurisdiction_code, company_number, sparse: sparse)
+        result = subject.get_company(jurisdiction_code, company_number, sparse:)
         expect(result).to be_nil
       end
     end
@@ -39,7 +39,7 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       let(:jurisdiction_code) { 'unknown' }
 
       it 'returns nil' do
-        result = subject.get_company(jurisdiction_code, company_number, sparse: sparse)
+        result = subject.get_company(jurisdiction_code, company_number, sparse:)
         expect(result).to be_nil
       end
     end
@@ -48,20 +48,20 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       let(:results) do
         [
           double(record: { r1: 'r1' }, score: 5.6),
-          double(record: { r2: 'r2' }, score: 5.2)
+          double(record: { r2: 'r2' }, score: 5.2),
         ]
       end
 
       before do
         expect(company_repository).to receive(:get).with(
-          jurisdiction_code: jurisdiction_code,
-          company_number: company_number  
+          jurisdiction_code:,
+          company_number:,
         ).and_return results
       end
 
       context 'with jurisdiction_code the upper-case of a valid jurisdiction' do
         it 'returns record of first result' do
-          result = subject.get_company('GB', company_number, sparse: sparse)
+          result = subject.get_company('GB', company_number, sparse:)
           expect(result).to eq({ r1: 'r1' })
         end
       end
@@ -70,14 +70,14 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
         let(:results) { [] }
 
         it 'returns nil' do
-          result = subject.get_company(jurisdiction_code, company_number, sparse: sparse)
+          result = subject.get_company(jurisdiction_code, company_number, sparse:)
           expect(result).to be_nil
         end
       end
 
       context 'with results non-empty' do
         it 'returns record of first result' do
-          result = subject.get_company(jurisdiction_code, company_number, sparse: sparse)
+          result = subject.get_company(jurisdiction_code, company_number, sparse:)
           expect(result).to eq({ r1: 'r1' })
         end
       end
@@ -110,14 +110,14 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       let(:results) do
         [
           double(record: { r1: 'r1' }, score: 5.6),
-          double(record: { r2: 'r2' }, score: 5.2)
+          double(record: { r2: 'r2' }, score: 5.2),
         ]
       end
 
       before do
         expect(company_repository).to receive(:search_by_number).with(
-          jurisdiction_code: jurisdiction_code,
-          company_number: company_number
+          jurisdiction_code:,
+          company_number:,
         ).and_return results
       end
 
@@ -134,7 +134,7 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
         it 'returns record of first result' do
           result = subject.search_companies(jurisdiction_code, company_number)
           expect(result).to eq [
-            { company: { r1: 'r1' } }
+            { company: { r1: 'r1' } },
           ]
         end
       end
@@ -157,13 +157,13 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       let(:results) do
         [
           double(record: { r1: 'r1' }, score: 5.6),
-          double(record: { r2: 'r2' }, score: 5.2)
+          double(record: { r2: 'r2' }, score: 5.2),
         ]
       end
 
       before do
         expect(company_repository).to receive(:search_by_name).with(
-          name
+          name,
         ).and_return results
       end
 
@@ -180,7 +180,7 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
         it 'returns record of first result' do
           result = subject.search_companies_by_name(name)
           expect(result).to eq [
-            { company: { r1: 'r1' } }
+            { company: { r1: 'r1' } },
           ]
         end
       end

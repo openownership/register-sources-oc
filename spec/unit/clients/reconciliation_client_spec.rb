@@ -15,7 +15,7 @@ RSpec.describe RegisterSourcesOc::Clients::ReconciliationClient do
         query: @name,
       }
 
-      @stub = stub_request(:get, @url).with(query: query)
+      @stub = stub_request(:get, @url).with(query:)
     end
 
     it 'returns company data for the given jurisdiction_code and company name' do

@@ -25,6 +25,7 @@ module RegisterSourcesOc
         unless jurisdiction_code
           country = request.country
           return ResolverResponse.new(resolved: false) unless country
+
           jurisdiction_code = jurisdiction_code_service.query_jurisdiction(country, region: request.region)
         end
 
@@ -38,7 +39,7 @@ module RegisterSourcesOc
         unless company_number
           reconciliation_response = reconcile(request)
 
-          return ResolverResponse.new(resolved: false, jurisdiction_code: jurisdiction_code) unless reconciliation_response.reconciled
+          return ResolverResponse.new(resolved: false, jurisdiction_code:) unless reconciliation_response.reconciled
 
           company_number = reconciliation_response.company_number
         end
@@ -56,10 +57,10 @@ module RegisterSourcesOc
 
         ResolverResponse[{
           resolved: !company.nil?,
-          jurisdiction_code: jurisdiction_code,
-          company_number: company_number,
-          reconciliation_response: reconciliation_response,
-          company: company
+          jurisdiction_code:,
+          company_number:,
+          reconciliation_response:,
+          company:,
         }.compact]
       end
 
@@ -71,8 +72,8 @@ module RegisterSourcesOc
         reconciliation_service.reconcile(
           ReconciliationRequest.new(
             jurisdiction_code: request.jurisdiction_code,
-            name: request.name
-          )
+            name: request.name,
+          ),
         )
       end
     end

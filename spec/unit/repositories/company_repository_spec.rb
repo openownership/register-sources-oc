@@ -1,7 +1,7 @@
 require 'register_sources_oc/repositories/company_repository'
 
 RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
-  subject { described_class.new(client: es_client, index: index) }
+  subject { described_class.new(client: es_client, index:) }
 
   let(:es_client) { double 'es_client' }
   let(:index) { double 'index' }
@@ -9,31 +9,31 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
 
   describe '#get' do
     let(:jurisdiction_code) { 'gb' }
-    let(:company_number) { 123456 }
+    let(:company_number) { 123_456 }
 
     let(:hits) { [] }
     let(:results) { { 'hits' => { 'hits' => hits } } }
 
-    let(:query_body) {
+    let(:query_body) do
       {
         query: {
           bool: {
             must: [
-              { match: { company_number: { query: 123456 }}},
-              { match: { jurisdiction_code: { query: "gb" }}}
-            ]
-          }
-        }
+              { match: { company_number: { query: 123_456 } } },
+              { match: { jurisdiction_code: { query: "gb" } } },
+            ],
+          },
+        },
       }
-    }
+    end
 
     before do
       expect(es_client).to receive(:search).with(
-        index: index,
-        body: query_body
+        index:,
+        body: query_body,
       ).and_return results
     end
-  
+
     context 'when has results' do
       let(:hits) do
         [
@@ -47,15 +47,15 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
               dissolution_date: '5678',
               restricted_for_marketing: false,
               registered_address_in_full: 'registered_in_full',
-              registered_address_country: 'registered_country'
+              registered_address_country: 'registered_country',
             },
-            '_score' => 4.5
-          }
+            '_score' => 4.5,
+          },
         ]
       end
 
       it 'searches elasticsearch' do
-        results = subject.get(jurisdiction_code: jurisdiction_code, company_number: company_number)
+        results = subject.get(jurisdiction_code:, company_number:)
 
         expect(results.length).to eq 1
         result = results.first
@@ -68,38 +68,30 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
         expect(record.company_type).to eq 'company_type'
         expect(record.incorporation_date).to eq '1234'
         expect(record.dissolution_date).to eq '5678'
-        expect(record.restricted_for_marketing).to eq false
+        expect(record.restricted_for_marketing).to be false
         expect(record.registered_address_in_full).to eq 'registered_in_full'
         expect(record.registered_address_country).to eq 'registered_country'
 
         expect(result.score).to eq 4.5
       end
     end
-  
+
     context 'when has empty results' do
       let(:hits) { [] }
 
       it 'searches elasticsearch and returns empty results' do
-        results = subject.get(jurisdiction_code: jurisdiction_code, company_number: company_number)
+        results = subject.get(jurisdiction_code:, company_number:)
 
         expect(results).to eq []
       end
     end
   end
 
-  describe '#search_by_number' do
-    
-  end
-
-  describe '#search_by_name' do
-    
-  end
-
   describe '#store' do
     let(:records) do
       [
-        fake_record_struct.new('gb1', 12345, 's1'),
-        fake_record_struct.new('gb2', 12346, 's2'),
+        fake_record_struct.new('gb1', 12_345, 's1'),
+        fake_record_struct.new('gb2', 12_346, 's2'),
       ]
     end
 
@@ -115,24 +107,24 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
               _id: "gb1:12345",
               _index: index,
               data: {
-                company_number: 12345,
+                company_number: 12_345,
                 jurisdiction_code: "gb1",
-                something: 's1'
-              }
-            }
+                something: 's1',
+              },
+            },
           },
           {
             index: {
               _id: "gb2:12346",
               _index: index,
               data: {
-                company_number: 12346,
+                company_number: 12_346,
                 jurisdiction_code: "gb2",
-                something: 's2'
-              }
-            }
-          }
-        ]
+                something: 's2',
+              },
+            },
+          },
+        ],
       )
     end
   end

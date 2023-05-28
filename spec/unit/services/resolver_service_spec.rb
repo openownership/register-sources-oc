@@ -4,9 +4,9 @@ require 'register_sources_oc/services/resolver_service'
 RSpec.describe RegisterSourcesOc::Services::ResolverService do
   subject do
     described_class.new(
-      company_service: company_service,
-      reconciliation_service: reconciliation_service,
-      jurisdiction_code_service: jurisdiction_code_service
+      company_service:,
+      reconciliation_service:,
+      jurisdiction_code_service:,
     )
   end
 
@@ -37,11 +37,11 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
 
     let(:resolver_request) do
       RegisterSourcesOc::ResolverRequest[{
-        jurisdiction_code: jurisdiction_code,
-        company_number: company_number,
-        name: name,
-        country: country,
-        region: region
+        jurisdiction_code:,
+        company_number:,
+        name:,
+        country:,
+        region:,
       }.compact]
     end
 
@@ -50,7 +50,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
 
       context 'with country existing' do
         let(:fetched_jurisdiction_code) { 'fetched_code' }
-        
+
         before do
           expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region: nil).and_return 'ca'
           expect(company_service).to receive(:get_company).and_return company
@@ -58,7 +58,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
 
         it 'returns resolved record' do
           result = subject.resolve(resolver_request)
-  
+
           expect(result).to be_a RegisterSourcesOc::ResolverResponse
           expect(result.jurisdiction_code).to eq 'ca'
           expect(result.reconciliation_response).to be_nil
@@ -88,7 +88,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         let(:region) { 'region' }
 
         before do
-          expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region: region).and_return 'ca'
+          expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region:).and_return 'ca'
           expect(company_service).to receive(:get_company).and_return company
         end
 
@@ -111,9 +111,9 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         before do
           expect(reconciliation_service).to receive(:reconcile).with(
             RegisterSourcesOc::ReconciliationRequest.new(
-              jurisdiction_code: jurisdiction_code,
-              name: name
-            )
+              jurisdiction_code:,
+              name:,
+            ),
           ).and_return double('reconcilation_response', reconciled: false)
         end
 
@@ -133,14 +133,14 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         before do
           expect(reconciliation_service).to receive(:reconcile).with(
             RegisterSourcesOc::ReconciliationRequest.new(
-              jurisdiction_code: jurisdiction_code,
-              name: name
-            )
+              jurisdiction_code:,
+              name:,
+            ),
           ).and_return RegisterSourcesOc::ReconciliationResponse.new(
-            jurisdiction_code: jurisdiction_code,
+            jurisdiction_code:,
             company_number: reconciled_company_number,
-            name: name,
-            reconciled: true
+            name:,
+            reconciled: true,
           )
 
           expect(company_service).to receive(:get_company).and_return company
@@ -150,7 +150,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           result = subject.resolve(resolver_request)
 
           expect(result).to be_a RegisterSourcesOc::ResolverResponse
-          expect(result.reconciliation_response.reconciled).to eq true
+          expect(result.reconciliation_response.reconciled).to be true
           expect(result.reconciliation_response.company_number).to eq reconciled_company_number
           expect(result.resolved).to be true
           expect(result.company).to eq company
@@ -180,7 +180,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         expect(company_service).to receive(:get_company).and_return nil
       end
 
-      context 'with search_companies returning an empty list of companies' do        
+      context 'with search_companies returning an empty list of companies' do
         before do
           expect(company_service).to receive(:search_companies).and_return []
         end
@@ -195,9 +195,9 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         end
       end
 
-      context 'with search_companies returning a non-empty list of companies' do        
+      context 'with search_companies returning a non-empty list of companies' do
         before do
-          expect(company_service).to receive(:search_companies).and_return [{ company: company }]
+          expect(company_service).to receive(:search_companies).and_return [{ company: }]
         end
 
         it 'returns resolved record' do

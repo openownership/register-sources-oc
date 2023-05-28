@@ -42,10 +42,12 @@ RSpec.shared_examples "trying services examples" do |method, *args, **kwargs|
         comparer_response = double 'comparer_response'
         expect(service1).to receive(method).with(*args, **kwargs).and_return expected
         expect(service2).to receive(method).with(*args, **kwargs).and_return expected
-        expect(comparer).to receive(:compare_results).with({
-          'service1' => expected,
-          'service2' => expected
-        }).and_return comparer_response
+        expect(comparer).to receive(:compare_results).with(
+          {
+            'service1' => expected,
+            'service2' => expected,
+          },
+        ).and_return comparer_response
 
         result = subject.send(method, *args, **kwargs)
         expect(result).to eq comparer_response
@@ -59,10 +61,12 @@ RSpec.shared_examples "trying services examples" do |method, *args, **kwargs|
         comparer_response = double 'comparer_response'
         expect(service1).to receive(method).with(*args, **kwargs).and_return expected
         expect(service2).to receive(method).with(*args, **kwargs).and_return expected2
-        expect(comparer).to receive(:compare_results).with({
-          'service1' => expected,
-          'service2' => expected2
-        }).and_return comparer_response
+        expect(comparer).to receive(:compare_results).with(
+          {
+            'service1' => expected,
+            'service2' => expected2,
+          },
+        ).and_return comparer_response
 
         result = subject.send(method, *args, **kwargs)
         expect(result).to eq comparer_response
@@ -76,11 +80,11 @@ RSpec.describe RegisterSourcesOc::Services::CompanyService do
     described_class.new(
       services: [
         { name: 'service1', service: service1 },
-        { name: 'service2', service: service2 }
+        { name: 'service2', service: service2 },
       ],
       verbose: false,
-      comparison_mode: comparison_mode,
-      comparer: comparer
+      comparison_mode:,
+      comparer:,
     )
   end
 
@@ -91,21 +95,21 @@ RSpec.describe RegisterSourcesOc::Services::CompanyService do
 
   describe '#get_jurisdiction_code' do
     include_examples "trying services examples",
-      :get_jurisdiction_code, :args
+                     :get_jurisdiction_code, :args
   end
 
   describe '#get_company' do
     include_examples "trying services examples",
-      :get_company, 'jurisdiction_code', 'company_number', sparse: true
+                     :get_company, 'jurisdiction_code', 'company_number', sparse: true
   end
 
   describe '#search_companies' do
     include_examples "trying services examples",
-      :search_companies, 'jurisdiction_code', 'company_number'
+                     :search_companies, 'jurisdiction_code', 'company_number'
   end
 
   describe '#search_companies_by_name' do
     include_examples "trying services examples",
-      :search_companies_by_name, 'name'
+                     :search_companies_by_name, 'name'
   end
 end

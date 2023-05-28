@@ -11,13 +11,13 @@ module RegisterSourcesOc
       def reconcile(request)
         response = reconciliation_client.reconcile(request.jurisdiction_code, request.name)
 
-        company_number = response && response.fetch(:company_number)
+        company_number = response&.fetch(:company_number)
 
         ReconciliationResponse.new(
           reconciled: !response.nil?,
           jurisdiction_code: request.jurisdiction_code,
           name: request.name,
-          company_number: company_number
+          company_number:,
         )
       end
 
