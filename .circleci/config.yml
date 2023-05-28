@@ -50,6 +50,7 @@ jobs:
       - run:
           command: bundle exec rspec
           environment:
+            TEST: 1
             BODS_AWS_REGION: eu-west-1
             BODS_AWS_ACCESS_KEY_ID: key1
             BODS_AWS_SECRET_ACCESS_KEY: secret1
