@@ -4,21 +4,21 @@ require 'register_sources_oc/services/es_index_creator'
 require 'register_sources_oc/structs/alt_name'
 
 RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
-  subject { described_class.new(client: es_client, index: index) }
+  subject { described_class.new(client: es_client, index:) }
 
   let(:index) { SecureRandom.uuid }
   let(:es_client) do
     Elasticsearch::Client.new(
-      host: "http://elastic:#{ENV['ELASTICSEARCH_PASSWORD']}@#{ENV['ELASTICSEARCH_HOST']}:#{ENV['ELASTICSEARCH_PORT']}",
+      host: "http://elastic:#{ENV.fetch('ELASTICSEARCH_PASSWORD', nil)}@#{ENV.fetch('ELASTICSEARCH_HOST', nil)}:#{ENV.fetch('ELASTICSEARCH_PORT', nil)}",
       transport_options: { ssl: { verify: false } },
-      log: false
+      log: false,
     )
   end
 
   before do
     index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
       alt_names_index: index,
-      client: es_client
+      client: es_client,
     )
     index_creator.create_alt_names_index
   end
@@ -33,7 +33,7 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
           type: 'type',
           start_date: '2020-07-06',
           end_date: '2021-02-27',
-        )
+        ),
       ]
 
       subject.store(records)

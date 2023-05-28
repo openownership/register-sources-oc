@@ -6,10 +6,11 @@ module RegisterSourcesOc
   module Clients
     class GoogleGeocoderClient
       def initialize(api_key: nil, error_adapter: nil)
-        @api_key = api_key || ENV['GOOGLE_GEOCODE_API_KEY']
+        @api_key = api_key || ENV.fetch('GOOGLE_GEOCODE_API_KEY', nil)
         @error_adapter = error_adapter
 
         return unless @api_key
+
         Geokit::Geocoders::GoogleGeocoder.api_key = @api_key
       end
 
@@ -23,10 +24,10 @@ module RegisterSourcesOc
           country: result.country,
           country_code: result.country_code.downcase,
           state: result.state_name,
-          state_code: result.state_code&.downcase
+          state_code: result.state_code&.downcase,
         )
       rescue StandardError => e
-        error_adapter && error_adapter.error(e)
+        error_adapter&.error(e)
         nil
       end
 

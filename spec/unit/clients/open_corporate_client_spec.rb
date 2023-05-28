@@ -21,11 +21,11 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
 
   let :client do
     described_class.new(
-      api_token: api_token,
+      api_token:,
       open_timeout: 1.0,
       read_timeout: 1.0,
       raise_timeouts: false,
-      logger: logger
+      logger:,
     )
   end
 
@@ -100,11 +100,11 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
       context "when raise_timeouts is true" do
         let :client do
           described_class.new(
-            api_token: api_token,
+            api_token:,
             open_timeout: 1.0,
             read_timeout: 1.0,
             raise_timeouts: true,
-            logger: logger
+            logger:,
           )
         end
 
@@ -117,12 +117,12 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
   end
 
   describe '#get_jurisdiction_code' do
+    subject { client.get_jurisdiction_code('United Kingdom') }
+
     before do
       url = "https://api.opencorporates.com/#{described_class::API_VERSION}/jurisdictions/match"
       @stub = stub_request(:get, url).with(query: "q=United+Kingdom&api_token=#{api_token}", headers: mock_req_headers)
     end
-
-    subject { client.get_jurisdiction_code('United Kingdom') }
 
     include_examples "response errors", "United Kingdom", nil
 
@@ -148,6 +148,8 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
   end
 
   describe '#get_company' do
+    subject { client.get_company('gb', @number) }
+
     before do
       @number = '01234567'
       @url = "https://api.opencorporates.com/#{described_class::API_VERSION}/companies/gb/"
@@ -156,8 +158,6 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
 
       @stub = stub_request(:get, URI.join(@url, @number)).with(query: "sparse=true&api_token=#{api_token}", headers: mock_req_headers)
     end
-
-    subject { client.get_company('gb', @number) }
 
     include_examples "response errors", "gb.*01234567", nil
 
@@ -193,11 +193,11 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
     end
 
     context 'when called with sparse: false' do
+      subject { client.get_company('gb', '01234567', sparse: false) }
+
       before do
         stub_request(:get, URI.join(@url, @number)).with(query: "api_token=#{api_token}", headers: mock_req_headers).to_return(body: @body, headers: mock_res_headers)
       end
-
-      subject { client.get_company('gb', '01234567', sparse: false) }
 
       it 'calls the endpoint without the sparse parameter' do
         subject
@@ -206,6 +206,8 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
   end
 
   describe '#search_companies' do
+    subject { client.search_companies('gb', '01234567') }
+
     before do
       url = "https://api.opencorporates.com/#{described_class::API_VERSION}/companies/search"
 
@@ -214,13 +216,11 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
         jurisdiction_code: 'gb',
         fields: 'company_number',
         order: 'score',
-        api_token: api_token,
+        api_token:,
       }
 
-      @stub = stub_request(:get, url).with(query: query, headers: mock_req_headers)
+      @stub = stub_request(:get, url).with(query:, headers: mock_req_headers)
     end
-
-    subject { client.search_companies('gb', '01234567') }
 
     include_examples "response errors", "01234567.*gb", []
 
@@ -239,6 +239,8 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
   end
 
   describe '#search_companies_by_name' do
+    subject { client.search_companies_by_name('Example Ltd') }
+
     before do
       url = "https://api.opencorporates.com/#{described_class::API_VERSION}/companies/search"
 
@@ -246,13 +248,11 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
         q: 'Example Ltd',
         fields: 'company_name',
         order: 'score',
-        api_token: api_token,
+        api_token:,
       }
 
-      @stub = stub_request(:get, url).with(query: query, headers: mock_req_headers)
+      @stub = stub_request(:get, url).with(query:, headers: mock_req_headers)
     end
-
-    subject { client.search_companies_by_name('Example Ltd') }
 
     include_examples "response errors", "Example Ltd", []
 

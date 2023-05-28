@@ -29,8 +29,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'dotenv'
 
-  spec.add_dependency 'dry-types', '>= 1', '< 2'
   spec.add_dependency 'dry-struct', '>= 1', '< 2'
+  spec.add_dependency 'dry-types', '>= 1', '< 2'
 
   spec.add_dependency 'elasticsearch', '>= 7.10', '< 8'
 
@@ -43,4 +43,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'faraday_middleware', '>= 1', '< 2'
   spec.add_dependency 'geokit', '>= 1', '< 2'
   spec.add_dependency 'net-http-persistent'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end

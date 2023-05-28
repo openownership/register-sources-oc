@@ -5,7 +5,7 @@ require 'register_sources_oc/clients/open_corporate_client'
 module RegisterSourcesOc
   module Services
     class OcApiCompanyService
-      FIELDS = [:company_number, :jurisdiction_code, :name, :company_type, :incorporation_date, :dissolution_date, :restricted_for_marketing, :registered_address_in_full, :registered_address_country]
+      FIELDS = %i[company_number jurisdiction_code name company_type incorporation_date dissolution_date restricted_for_marketing registered_address_in_full registered_address_country].freeze
 
       extend Forwardable
 
@@ -16,7 +16,7 @@ module RegisterSourcesOc
       end
 
       def get_company(jurisdiction_code, company_number, sparse: true)
-        result = open_corporate_client.get_company(jurisdiction_code, company_number, sparse: sparse)
+        result = open_corporate_client.get_company(jurisdiction_code, company_number, sparse:)
         map_result result
       end
 
@@ -43,7 +43,7 @@ module RegisterSourcesOc
       def map_result(result)
         return unless result
 
-        FIELDS.map { |field| [field, result[field]] }.to_h
+        FIELDS.to_h { |field| [field, result[field]] }
       end
     end
   end

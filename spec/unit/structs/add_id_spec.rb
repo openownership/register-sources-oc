@@ -1,7 +1,7 @@
 require 'register_sources_oc/structs/add_id'
 
 RSpec.describe RegisterSourcesOc::AddId do
-  subject { RegisterSourcesOc::AddId }
+  subject { described_class }
 
   context 'when given valid data' do
     let(:input_data) do
@@ -9,7 +9,7 @@ RSpec.describe RegisterSourcesOc::AddId do
         company_number: '123456',
         jurisdiction_code: 'gb',
         uid: 'uid',
-        identifier_system_code: 'identifier_system_code'
+        identifier_system_code: 'identifier_system_code',
       }
     end
 

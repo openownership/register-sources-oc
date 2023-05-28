@@ -12,7 +12,7 @@ module RegisterSourcesOc
       def initialize(services: nil, verbose: false, comparison_mode: false, comparer: nil)
         @services = services || [
           { name: "bulk", service: BulkDataCompanyService.new },
-          { name: "api", service: OcApiCompanyService.new }
+          { name: "api", service: OcApiCompanyService.new },
         ]
         @verbose = verbose
         @comparison_mode = comparison_mode
@@ -27,7 +27,7 @@ module RegisterSourcesOc
 
       def get_company(jurisdiction_code, company_number, sparse: true)
         try_services do |service|
-          service.get_company(jurisdiction_code, company_number, sparse: sparse)
+          service.get_company(jurisdiction_code, company_number, sparse:)
         end
       end
 

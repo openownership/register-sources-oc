@@ -15,10 +15,10 @@ module RegisterSourcesOc
             next if incorrect1.empty? && incorrect2.empty?
 
             match_failures << {
-              service1: service1,
+              service1:,
               response1: incorrect1,
-              service2: service2,
-              response2: incorrect2
+              service2:,
+              response2: incorrect2,
             }
           end
         end
@@ -43,8 +43,9 @@ module RegisterSourcesOc
           response1.keys.map do |k|
             next if k == :registered_address_country
             next if response1[k] == response2[k]
-            if k == :registered_address_in_full
-              next if response1[k].strip == response2[k].strip
+
+            if k == :registered_address_in_full && (response1[k].strip == response2[k].strip)
+              next
             end
 
             [k, response1[k]]

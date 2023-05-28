@@ -4,21 +4,21 @@ require 'register_sources_oc/services/es_index_creator'
 require 'register_sources_oc/structs/company'
 
 RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
-  subject { described_class.new(client: es_client, index: index) }
+  subject { described_class.new(client: es_client, index:) }
 
   let(:index) { SecureRandom.uuid }
   let(:es_client) do
     Elasticsearch::Client.new(
-      host: "http://elastic:#{ENV['ELASTICSEARCH_PASSWORD']}@#{ENV['ELASTICSEARCH_HOST']}:#{ENV['ELASTICSEARCH_PORT']}",
+      host: "http://elastic:#{ENV.fetch('ELASTICSEARCH_PASSWORD', nil)}@#{ENV.fetch('ELASTICSEARCH_HOST', nil)}:#{ENV.fetch('ELASTICSEARCH_PORT', nil)}",
       transport_options: { ssl: { verify: false } },
-      log: false
+      log: false,
     )
   end
 
   before do
     index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
       companies_index: index,
-      client: es_client
+      client: es_client,
     )
     index_creator.create_companies_index
   end
@@ -35,8 +35,8 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
           dissolution_date: '2021-09-07',
           restricted_for_marketing: nil,
           registered_address_in_full: 'registered address',
-          registered_address_country: 'country'
-        )
+          registered_address_country: 'country',
+        ),
       ]
 
       subject.store(records)

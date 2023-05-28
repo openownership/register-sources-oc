@@ -1,7 +1,7 @@
 require 'register_sources_oc/clients/google_geocoder_client'
 
 RSpec.describe RegisterSourcesOc::Clients::GoogleGeocoderClient do
-  subject { described_class.new(api_key: api_key, error_adapter: error_adapter) }
+  subject { described_class.new(api_key:, error_adapter:) }
 
   let(:api_key) { 'api_token_xxx' }
   let(:geocode_response) do
@@ -25,7 +25,7 @@ RSpec.describe RegisterSourcesOc::Clients::GoogleGeocoderClient do
             country: "Canada",
             country_code: "ca",
             state: "Prince Edward Island",
-            state_code: "pe"
+            state_code: "pe",
           )
         end
       end
@@ -38,11 +38,11 @@ RSpec.describe RegisterSourcesOc::Clients::GoogleGeocoderClient do
         it 'returns nil' do
           result = subject.jurisdiction address_string
 
-          expect(result).to eq nil
+          expect(result).to be_nil
         end
       end
     end
-  
+
     context 'when api_key is nil' do
       let(:api_key) { nil }
 
@@ -65,7 +65,7 @@ RSpec.describe RegisterSourcesOc::Clients::GoogleGeocoderClient do
         it 'returns nil' do
           result = subject.jurisdiction address_string
 
-          expect(result).to eq nil
+          expect(result).to be_nil
         end
       end
 
@@ -77,7 +77,7 @@ RSpec.describe RegisterSourcesOc::Clients::GoogleGeocoderClient do
 
           result = subject.jurisdiction address_string
 
-          expect(result).to eq nil
+          expect(result).to be_nil
 
           expect(error_adapter).to have_received(:error)
         end

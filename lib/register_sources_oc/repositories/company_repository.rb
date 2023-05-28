@@ -17,7 +17,7 @@ module RegisterSourcesOc
       def get(jurisdiction_code:, company_number:)
         process_results(
           client.search(
-            index: index,
+            index:,
             body: {
               query: {
                 bool: {
@@ -25,29 +25,29 @@ module RegisterSourcesOc
                     {
                       match: {
                         company_number: {
-                          query: company_number
-                        }
-                      }
+                          query: company_number,
+                        },
+                      },
                     },
                     {
                       match: {
                         jurisdiction_code: {
-                          query: jurisdiction_code
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          )
+                          query: jurisdiction_code,
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          ),
         )
       end
 
       def search_by_number(jurisdiction_code:, company_number:)
         process_results(
           client.search(
-            index: index,
+            index:,
             body: {
               query: {
                 bool: {
@@ -55,55 +55,55 @@ module RegisterSourcesOc
                     {
                       match: {
                         company_number: {
-                          query: company_number
-                        }
-                      }
+                          query: company_number,
+                        },
+                      },
                     },
                     {
                       match: {
                         jurisdiction_code: {
-                          query: jurisdiction_code
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          )
+                          query: jurisdiction_code,
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          ),
         )
       end
 
       def search_by_name(name)
         process_results(
           client.search(
-            index: index,
+            index:,
             body: {
               query: {
                 bool: {
                   must: [
                     match: {
-                      "name.raw": {
-                        query: name
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          )
+                      'name.raw': {
+                        query: name,
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          ),
         )
       end
 
       def store(records)
         operations = records.map do |record|
           {
-            index:  {
+            index: {
               _index: index,
               _id: calculate_id(record),
               # _type: 'company',
-              data: record.to_h
-            }
+              data: record.to_h,
+            },
           }
         end
 
@@ -134,7 +134,7 @@ module RegisterSourcesOc
 
           SearchResult.new(
             Company.new(**source),
-            hit['_score']
+            hit['_score'],
           )
         end
 

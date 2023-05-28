@@ -29,8 +29,8 @@ module RegisterSourcesOc
 
         {
           name: result.fetch(:name),
-          jurisdiction_code: jurisdiction_code,
-          company_number: company_number,
+          jurisdiction_code:,
+          company_number:,
         }
       rescue Net::HTTP::Persistent::Error => e
         logger.info("Received #{e.inspect} when reconciling \"#{search_query}\" (#{jurisdiction_code})")

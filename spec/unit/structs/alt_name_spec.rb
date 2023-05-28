@@ -1,7 +1,7 @@
 require 'register_sources_oc/structs/alt_name'
 
 RSpec.describe RegisterSourcesOc::AltName do
-  subject { RegisterSourcesOc::AltName }
+  subject { described_class }
 
   context 'when given valid data' do
     let(:input_data) do

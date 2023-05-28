@@ -7,7 +7,7 @@ RSpec.describe RegisterSourcesOc::ReconciliationRequest do
     let(:input_data) do
       {
         jurisdiction_code: 'gb',
-        name: 'company name'
+        name: 'company name',
       }
     end
 

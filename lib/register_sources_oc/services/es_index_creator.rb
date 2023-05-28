@@ -19,45 +19,45 @@ module RegisterSourcesOc
         client.indices.create index: companies_index, body: {
           mappings: {
             properties: {
-              "company_number": {
-                "type": "keyword"
+              company_number: {
+                type: "keyword",
               },
-              "jurisdiction_code": {
-                "type": "keyword"
+              jurisdiction_code: {
+                type: "keyword",
               },
-              "name": {
-                "type": "text",
-                "fields": {
-                  "raw": { 
-                    "type":  "keyword"
-                  }
-                }
+              name: {
+                type: "text",
+                fields: {
+                  raw: {
+                    type: "keyword",
+                  },
+                },
               },
-              "company_type": {
-                "type": "keyword"
+              company_type: {
+                type: "keyword",
               },
-              "incorporation_date": {
-                "type": "keyword"
+              incorporation_date: {
+                type: "keyword",
               },
-              "dissolution_date": {
-                "type": "keyword"
+              dissolution_date: {
+                type: "keyword",
               },
-              "restricted_for_marketing": {
-                "type": "boolean"
+              restricted_for_marketing: {
+                type: "boolean",
               },
-              "registered_address_in_full": {
-                "type": "text",
-                "fields": {
-                  "raw": { 
-                    "type":  "keyword"
-                  }
-                }
+              registered_address_in_full: {
+                type: "text",
+                fields: {
+                  raw: {
+                    type: "keyword",
+                  },
+                },
               },
-              "registered_address_country": {
-                "type": "keyword"
+              registered_address_country: {
+                type: "keyword",
               },
-            }
-          }
+            },
+          },
         }
       end
 
@@ -65,20 +65,20 @@ module RegisterSourcesOc
         client.indices.create index: add_ids_index, body: {
           mappings: {
             properties: {
-              "company_number": {
-                "type": "keyword"
+              company_number: {
+                type: "keyword",
               },
-              "jurisdiction_code": {
-                "type": "keyword"
+              jurisdiction_code: {
+                type: "keyword",
               },
-              "uid": {
-                "type": "keyword"
+              uid: {
+                type: "keyword",
               },
-              "identifier_system_code": {
-                "type": "keyword"
-              }
-            }
-          }
+              identifier_system_code: {
+                type: "keyword",
+              },
+            },
+          },
         }
       end
 
@@ -86,31 +86,31 @@ module RegisterSourcesOc
         client.indices.create index: alt_names_index, body: {
           mappings: {
             properties: {
-              "company_number": {
-                "type": "keyword"
+              company_number: {
+                type: "keyword",
               },
-              "jurisdiction_code": {
-                "type": "keyword"
+              jurisdiction_code: {
+                type: "keyword",
               },
-              "name": {
-                "type": "text",
-                "fields": {
-                  "raw": { 
-                    "type":  "keyword"
-                  }
-                }
+              name: {
+                type: "text",
+                fields: {
+                  raw: {
+                    type: "keyword",
+                  },
+                },
               },
-              "type": {
-                "type": "keyword"
+              type: {
+                type: "keyword",
               },
-              "start_date": {
-                "type": "keyword"
+              start_date: {
+                type: "keyword",
               },
-              "end_date": {
-                "type": "keyword"
-              }
-            }
-          }
+              end_date: {
+                type: "keyword",
+              },
+            },
+          },
         }
       end
 
