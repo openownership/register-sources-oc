@@ -45,10 +45,10 @@ RSpec.describe RegisterSourcesOc::Clients::ReconciliationClient do
       expect(response).to be_nil
     end
 
-    it 'raises an exception for response errors' do
+    it 'returns nil for response errors' do
       @stub.to_return(status: 500)
 
-      expect { subject.reconcile(@jurisdiction_code, @name) }.to raise_error(described_class::Error)
+      expect(subject.reconcile(@jurisdiction_code, @name)).to be_nil
     end
   end
 end

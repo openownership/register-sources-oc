@@ -37,7 +37,7 @@ module RegisterSourcesOc
 
         # Reconcile if necessary
         unless company_number
-          reconciliation_response = reconcile(request)
+          reconciliation_response = reconcile(request, jurisdiction_code)
 
           return ResolverResponse.new(resolved: false, jurisdiction_code:) unless reconciliation_response.reconciled
 
@@ -68,10 +68,10 @@ module RegisterSourcesOc
 
       attr_reader :company_service, :reconciliation_service, :jurisdiction_code_service
 
-      def reconcile(request)
+      def reconcile(request, jurisdiction_code)
         reconciliation_service.reconcile(
           ReconciliationRequest.new(
-            jurisdiction_code: request.jurisdiction_code,
+            jurisdiction_code:,
             name: request.name,
           ),
         )
