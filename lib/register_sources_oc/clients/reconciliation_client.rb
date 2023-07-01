@@ -9,13 +9,15 @@ module RegisterSourcesOc
       class Error < StandardError
       end
 
-      def initialize(logger: Logger.new(nil))
+      def initialize(logger: Logger.new($stdout))
         @http = Net::HTTP::Persistent.new(name: self.class.name)
         @logger = logger
       end
 
       def reconcile(jurisdiction_code, search_query)
         uri = URI("https://opencorporates.com/reconcile/#{jurisdiction_code}?query=" + escape(search_query))
+
+        logger.info("Reconciling uri: #{uri}")
 
         response = @http.request(uri)
 
@@ -32,7 +34,10 @@ module RegisterSourcesOc
           jurisdiction_code:,
           company_number:,
         }
-      rescue Net::HTTP::Persistent::Error => e
+      # rescue Net::HTTP::Persistent::Error => e
+      #  logger.info("Received #{e.inspect} when reconciling \"#{search_query}\" (#{jurisdiction_code})")
+      #  nil
+      rescue StandardError => e
         logger.info("Received #{e.inspect} when reconciling \"#{search_query}\" (#{jurisdiction_code})")
         nil
       end
