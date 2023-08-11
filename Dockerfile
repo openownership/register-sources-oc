@@ -26,5 +26,3 @@ RUN bundle install
 COPY --chown=x:x . .
 #-------------------------------------------------------------------------------
 ENV PATH=/home/x/r/bin:$PATH
-
-CMD ["run-dev"]
