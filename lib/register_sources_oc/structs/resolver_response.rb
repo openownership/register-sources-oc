@@ -1,8 +1,9 @@
 require 'dry-types'
 require 'dry-struct'
 
-require_relative 'reconciliation_response'
+require_relative 'add_id'
 require_relative 'company'
+require_relative 'reconciliation_response'
 
 module RegisterSourcesOc
   module Types
@@ -17,5 +18,6 @@ module RegisterSourcesOc
     attribute? :company_number, Types::String
     attribute? :reconciliation_response, ReconciliationResponse.optional
     attribute? :company, Company.optional
+    attribute? :add_ids, Types.Array(AddId)
   end
 end
