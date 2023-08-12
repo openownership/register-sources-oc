@@ -95,7 +95,7 @@ RSpec/MultipleExpectations:
 # Offense count: 31
 # Configuration parameters: AllowSubject.
 RSpec/MultipleMemoizedHelpers:
-  Max: 11
+  Max: 13
 
 # Offense count: 72
 # Configuration parameters: EnforcedStyle, IgnoreSharedExamples.

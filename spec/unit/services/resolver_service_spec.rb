@@ -7,12 +7,14 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       company_service:,
       reconciliation_service:,
       jurisdiction_code_service:,
+      add_id_repository:,
     )
   end
 
   let(:company_service) { double 'company_service' }
   let(:reconciliation_service) { double 'reconciliation_service' }
   let(:jurisdiction_code_service) { double 'jurisdiction_code_service' }
+  let(:add_id_repository) { double 'add_id_repository' }
 
   let(:company) do
     RegisterSourcesOc::Company.new(
@@ -26,6 +28,12 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       registered_address_in_full: 'registered address',
       registered_address_country: 'country',
     )
+  end
+
+  let(:add_ids) do
+    [
+      RegisterSourcesOc::AddId.new(jurisdiction_code: 'gb', company_number: '123456', identifier_system_code: 'lei', uid: '00MQKGBWLLX0RPPDO000'),
+    ]
   end
 
   describe '#resolve' do
@@ -54,6 +62,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         before do
           expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region: nil).and_return 'ca'
           expect(company_service).to receive(:get_company).and_return company
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca', company_number: }).and_return []
         end
 
         it 'returns resolved record' do
@@ -64,6 +73,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.reconciliation_response).to be_nil
           expect(result.resolved).to be true
           expect(result.company).to eq company
+          expect(result.add_ids).to eq []
         end
       end
 
@@ -81,6 +91,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.reconciliation_response).to be_nil
           expect(result.resolved).to be false
           expect(result.company).to be_nil
+          expect(result.add_ids).to be_nil
         end
       end
 
@@ -90,6 +101,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         before do
           expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region:).and_return 'ca'
           expect(company_service).to receive(:get_company).and_return company
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca', company_number: }).and_return []
         end
 
         it 'retuns response with reconciled false' do
@@ -100,6 +112,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.reconciliation_response).to be_nil
           expect(result.resolved).to be true
           expect(result.company).to eq company
+          expect(result.add_ids).to eq []
         end
       end
     end
@@ -124,6 +137,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.reconciliation_response).to be_nil
           expect(result.resolved).to be false
           expect(result.company).to be_nil
+          expect(result.add_ids).to be_nil
         end
       end
 
@@ -144,6 +158,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           )
 
           expect(company_service).to receive(:get_company).and_return company
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:, company_number: '901233' }).and_return []
         end
 
         it 'uses reconciled company_number' do
@@ -154,6 +169,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.reconciliation_response.company_number).to eq reconciled_company_number
           expect(result.resolved).to be true
           expect(result.company).to eq company
+          expect(result.add_ids).to eq []
         end
       end
     end
@@ -162,6 +178,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       before do
         expect(reconciliation_service).not_to receive(:reconcile)
         expect(company_service).to receive(:get_company).and_return company
+        expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:, company_number: }).and_return []
       end
 
       it 'returns resolved record' do
@@ -171,6 +188,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         expect(result.reconciliation_response).to be_nil
         expect(result.resolved).to be true
         expect(result.company).to eq company
+        expect(result.add_ids).to eq []
       end
     end
 
@@ -183,6 +201,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       context 'with search_companies returning an empty list of companies' do
         before do
           expect(company_service).to receive(:search_companies).and_return []
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:, company_number: }).and_return []
         end
 
         it 'returns resolved record' do
@@ -192,12 +211,14 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.reconciliation_response).to be_nil
           expect(result.resolved).to be false
           expect(result.company).to be_nil
+          expect(result.add_ids).to eq []
         end
       end
 
       context 'with search_companies returning a non-empty list of companies' do
         before do
           expect(company_service).to receive(:search_companies).and_return [{ company: }]
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:, company_number: }).and_return []
         end
 
         it 'returns resolved record' do
@@ -207,7 +228,27 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.reconciliation_response).to be_nil
           expect(result.resolved).to be true
           expect(result.company).to eq company
+          expect(result.add_ids).to eq []
         end
+      end
+    end
+
+    context 'when get_company returns a company with add_ids' do
+      before do
+        expect(reconciliation_service).not_to receive(:reconcile)
+        expect(company_service).to receive(:get_company).and_return company
+        expect(add_id_repository).to receive(:search_by_number)
+          .with({ jurisdiction_code:, company_number: })
+          .and_return add_ids.map { |e| RegisterSourcesOc::Repositories::AddIdRepository::SearchResult.new(e) }
+      end
+
+      it 'returns resolved record' do
+        result = subject.resolve(resolver_request)
+        expect(result).to be_a RegisterSourcesOc::ResolverResponse
+        expect(result.reconciliation_response).to be_nil
+        expect(result.resolved).to be true
+        expect(result.company).to eq company
+        expect(result.add_ids).to eq add_ids
       end
     end
   end

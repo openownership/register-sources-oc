@@ -1,10 +1,10 @@
+require 'register_sources_oc/repositories/add_id_repository'
 require 'register_sources_oc/services/company_service'
-require 'register_sources_oc/services/reconciliation_service'
 require 'register_sources_oc/services/jurisdiction_code_service'
-
+require 'register_sources_oc/services/reconciliation_service'
+require 'register_sources_oc/structs/reconciliation_request'
 require 'register_sources_oc/structs/resolver_request'
 require 'register_sources_oc/structs/resolver_response'
-require 'register_sources_oc/structs/reconciliation_request'
 
 module RegisterSourcesOc
   module Services
@@ -12,11 +12,13 @@ module RegisterSourcesOc
       def initialize(
         company_service: CompanyService.new,
         reconciliation_service: ReconciliationService.new,
-        jurisdiction_code_service: JurisdictionCodeService.new
+        jurisdiction_code_service: JurisdictionCodeService.new,
+        add_id_repository: Repositories::AddIdRepository.new
       )
         @company_service = company_service
         @reconciliation_service = reconciliation_service
         @jurisdiction_code_service = jurisdiction_code_service
+        @add_id_repository = add_id_repository
       end
 
       def resolve(request)
@@ -55,12 +57,17 @@ module RegisterSourcesOc
           end
         end
 
+        add_ids = @add_id_repository.search_by_number(
+          jurisdiction_code:, company_number:,
+        ).map(&:record)
+
         ResolverResponse[{
           resolved: !company.nil?,
           jurisdiction_code:,
           company_number:,
           reconciliation_response:,
           company:,
+          add_ids:,
         }.compact]
       end
 
