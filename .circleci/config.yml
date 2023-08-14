@@ -55,9 +55,6 @@ jobs:
             BODS_AWS_REGION: eu-west-1
             BODS_AWS_ACCESS_KEY_ID: key1
             BODS_AWS_SECRET_ACCESS_KEY: secret1
-            ELASTICSEARCH_HOST: localhost
-            # ELASTICSEARCH_PASSWORD:
-            ELASTICSEARCH_PORT: 9200
 
       # Linting
       - run:
