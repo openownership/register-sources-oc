@@ -124,4 +124,189 @@ RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
       )
     end
   end
+
+  describe "#each_lei" do
+    it "no results" do
+      expect(es_client).to receive(:search).with(
+        {
+          index:,
+          body: {
+            query: {
+              bool: {
+                must: [
+                  { term: { identifier_system_code: "lei" } },
+                ],
+              },
+            },
+          },
+          scroll: "10m",
+        },
+      ).and_return(
+        {
+          '_scroll_id' => 'SCROLL-1',
+          'hits' => {
+            'hits' => [],
+          },
+        },
+      )
+      es = []
+      subject.each_lei { |e| es << e }
+      expect(es).to eq([])
+    end
+
+    it "scrolled results" do # rubocop:disable RSpec/ExampleLength
+      expect(es_client).to receive(:search).with(
+        {
+          index:,
+          body: {
+            query: {
+              bool: {
+                must: [
+                  { term: { identifier_system_code: "lei" } },
+                ],
+              },
+            },
+          },
+          scroll: "10m",
+        },
+      ).and_return(
+        {
+          '_scroll_id' => 'SCROLL-1',
+          'hits' => {
+            'hits' => [
+              { '_source' => { jurisdiction_code: 'sk', company_number: 'C1', identifier_system_code: 'lei', uid: 'X-C1' } },
+            ],
+          },
+        },
+      )
+      expect(es_client).to receive(:scroll).with(
+        {
+          body: { scroll_id: "SCROLL-1" },
+          scroll: "5m",
+        },
+      ).and_return(
+        {
+          'hits' => {
+            'hits' => [
+              { '_source' => { jurisdiction_code: 'dk', company_number: 'C2', identifier_system_code: 'lei', uid: 'X-C2' } },
+            ],
+          },
+        },
+      ).once
+      expect(es_client).to receive(:scroll).with(
+        {
+          body: { scroll_id: "SCROLL-1" },
+          scroll: "5m",
+        },
+      ).and_return(
+        {
+          'hits' => {
+            'hits' => [],
+          },
+        },
+      ).once
+      es = []
+      subject.each_lei { |e| es.append(e) }
+      expect(es).to eq(
+        [
+          RegisterSourcesOc::AddId.new(jurisdiction_code: 'sk', company_number: 'C1', identifier_system_code: 'lei', uid: 'X-C1'),
+          RegisterSourcesOc::AddId.new(jurisdiction_code: 'dk', company_number: 'C2', identifier_system_code: 'lei', uid: 'X-C2'),
+        ],
+      )
+    end
+
+    it "filtered jurisdiction" do # rubocop:disable RSpec/ExampleLength
+      expect(es_client).to receive(:search).with(
+        {
+          index:,
+          body: {
+            query: {
+              bool: {
+                must: [
+                  { term: { identifier_system_code: "lei" } },
+                  { terms: { jurisdiction_code: ["sk"] } },
+                ],
+              },
+            },
+          },
+          scroll: "10m",
+        },
+      ).and_return(
+        {
+          '_scroll_id' => 'SCROLL-1',
+          'hits' => {
+            'hits' => [
+              { '_source' => { jurisdiction_code: 'sk', company_number: 'C1', identifier_system_code: 'lei', uid: 'X-C1' } },
+            ],
+          },
+        },
+      )
+      expect(es_client).to receive(:scroll).with(
+        {
+          body: { scroll_id: "SCROLL-1" },
+          scroll: "5m",
+        },
+      ).and_return(
+        {
+          'hits' => {
+            'hits' => [],
+          },
+        },
+      ).once
+      es = []
+      subject.each_lei(jurisdiction_codes: ['sk']) { |e| es.append(e) }
+      expect(es).to eq(
+        [
+          RegisterSourcesOc::AddId.new(jurisdiction_code: 'sk', company_number: 'C1', identifier_system_code: 'lei', uid: 'X-C1'),
+        ],
+      )
+    end
+
+    it "filtered lei" do # rubocop:disable RSpec/ExampleLength
+      expect(es_client).to receive(:search).with(
+        {
+          index:,
+          body: {
+            query: {
+              bool: {
+                must: [
+                  { term: { identifier_system_code: "lei" } },
+                  { terms: { uid: ["X-C1"] } },
+                ],
+              },
+            },
+          },
+          scroll: "10m",
+        },
+      ).and_return(
+        {
+          '_scroll_id' => 'SCROLL-1',
+          'hits' => {
+            'hits' => [
+              { '_source' => { jurisdiction_code: 'sk', company_number: 'C1', identifier_system_code: 'lei', uid: 'X-C1' } },
+            ],
+          },
+        },
+      )
+      expect(es_client).to receive(:scroll).with(
+        {
+          body: { scroll_id: "SCROLL-1" },
+          scroll: "5m",
+        },
+      ).and_return(
+        {
+          'hits' => {
+            'hits' => [],
+          },
+        },
+      ).once
+      es = []
+      subject.each_lei(uids: ['X-C1']) { |e| es.append(e) }
+      expect(es).to eq(
+        [
+          RegisterSourcesOc::AddId.new(jurisdiction_code: 'sk', company_number: 'C1', identifier_system_code: 'lei', uid: 'X-C1'),
+        ],
+      )
+    end
+  end
 end
