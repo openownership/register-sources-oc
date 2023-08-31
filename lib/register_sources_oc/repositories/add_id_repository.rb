@@ -7,6 +7,8 @@ require 'active_support/core_ext/hash/indifferent_access'
 module RegisterSourcesOc
   module Repositories
     class AddIdRepository
+      IDENTIFIER_SYSTEM_CODE_LEI = 'lei'.freeze
+
       SearchResult = Struct.new(:record, :score)
 
       def initialize(client: Config::ELASTICSEARCH_CLIENT, index: Config::ES_ADD_IDS_INDEX)
@@ -65,6 +67,23 @@ module RegisterSourcesOc
         result
       end
 
+      def each_lei(jurisdiction_codes: [], uids: [], &block)
+        q_must = [{ term: { identifier_system_code: IDENTIFIER_SYSTEM_CODE_LEI } }]
+        q_must << { terms: { jurisdiction_code: jurisdiction_codes } } unless jurisdiction_codes.empty?
+        q_must << { terms: { uid: uids } } unless uids.empty?
+        q = {
+          index:,
+          body: {
+            query: {
+              bool: {
+                must: q_must,
+              },
+            },
+          },
+        }
+        search_scroll(q, &block)
+      end
+
       private
 
       attr_reader :client, :index
@@ -88,6 +107,20 @@ module RegisterSourcesOc
         end
 
         mapped.sort_by(&:score).reverse
+      end
+
+      def search_scroll(query)
+        response = client.search(**query, scroll: '10m')
+        scroll_id = response['_scroll_id']
+        response['hits']['hits'].each { |h| yield wrap_hit(h) }
+        while response['hits']['hits'].size.positive?
+          response = client.scroll(body: { scroll_id: }, scroll: '5m')
+          response['hits']['hits'].each { |h| yield wrap_hit(h) }
+        end
+      end
+
+      def wrap_hit(hit)
+        AddId.new(JSON.parse(hit['_source'].to_json, symbolize_names: true))
       end
     end
   end
