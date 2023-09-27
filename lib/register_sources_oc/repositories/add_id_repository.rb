@@ -97,7 +97,7 @@ module RegisterSourcesOc
 
       def process_results(results)
         hits = results.dig('hits', 'hits') || []
-        hits = hits.sort { |hit| hit['_score'] }.reverse
+        hits = hits.sort { |hit| hit['_score'] }.reverse # rubocop:disable Lint/UnexpectedBlockArity # FIXME
 
         mapped = hits.map do |hit|
           source = JSON.parse(hit['_source'].to_json, symbolize_names: true)
