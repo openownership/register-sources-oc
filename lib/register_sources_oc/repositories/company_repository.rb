@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'digest'
 require 'json'
 require 'register_sources_oc/config/elasticsearch'
@@ -25,22 +27,22 @@ module RegisterSourcesOc
                     {
                       match: {
                         company_number: {
-                          query: company_number,
-                        },
-                      },
+                          query: company_number
+                        }
+                      }
                     },
                     {
                       match: {
                         jurisdiction_code: {
-                          query: jurisdiction_code,
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          ),
+                          query: jurisdiction_code
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          )
         )
       end
 
@@ -55,22 +57,22 @@ module RegisterSourcesOc
                     {
                       match: {
                         company_number: {
-                          query: company_number,
-                        },
-                      },
+                          query: company_number
+                        }
+                      }
                     },
                     {
                       match: {
                         jurisdiction_code: {
-                          query: jurisdiction_code,
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          ),
+                          query: jurisdiction_code
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          )
         )
       end
 
@@ -84,14 +86,14 @@ module RegisterSourcesOc
                   must: [
                     match: {
                       'name.raw': {
-                        query: name,
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          ),
+                        query: name
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          )
         )
       end
 
@@ -102,8 +104,8 @@ module RegisterSourcesOc
               _index: index,
               _id: calculate_id(record),
               # _type: 'company',
-              data: record.to_h,
-            },
+              data: record.to_h
+            }
           }
         end
 
@@ -134,7 +136,7 @@ module RegisterSourcesOc
 
           SearchResult.new(
             Company.new(**source),
-            hit['_score'],
+            hit['_score']
           )
         end
 

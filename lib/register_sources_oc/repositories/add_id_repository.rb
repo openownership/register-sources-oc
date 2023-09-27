@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'digest'
 require 'json'
 require 'register_sources_oc/config/elasticsearch'
@@ -7,7 +9,7 @@ require 'active_support/core_ext/hash/indifferent_access'
 module RegisterSourcesOc
   module Repositories
     class AddIdRepository
-      IDENTIFIER_SYSTEM_CODE_LEI = 'lei'.freeze
+      IDENTIFIER_SYSTEM_CODE_LEI = 'lei'
 
       SearchResult = Struct.new(:record, :score)
 
@@ -27,22 +29,22 @@ module RegisterSourcesOc
                     {
                       match: {
                         company_number: {
-                          query: company_number,
-                        },
-                      },
+                          query: company_number
+                        }
+                      }
                     },
                     {
                       match: {
                         jurisdiction_code: {
-                          query: jurisdiction_code,
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          ),
+                          query: jurisdiction_code
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          )
         )
       end
 
@@ -52,8 +54,8 @@ module RegisterSourcesOc
             index: {
               _index: index,
               _id: calculate_id(record),
-              data: record.to_h,
-            },
+              data: record.to_h
+            }
           }
         end
 
@@ -76,10 +78,10 @@ module RegisterSourcesOc
           body: {
             query: {
               bool: {
-                must: q_must,
-              },
-            },
-          },
+                must: q_must
+              }
+            }
+          }
         }
         search_scroll(q, &block)
       end
@@ -102,7 +104,7 @@ module RegisterSourcesOc
 
           SearchResult.new(
             AddId.new(**source),
-            hit['_score'],
+            hit['_score']
           )
         end
 

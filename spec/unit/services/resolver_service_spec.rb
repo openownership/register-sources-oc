@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/structs/resolver_request'
 require 'register_sources_oc/services/resolver_service'
 
@@ -7,7 +9,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       company_service:,
       reconciliation_service:,
       jurisdiction_code_service:,
-      add_id_repository:,
+      add_id_repository:
     )
   end
 
@@ -26,13 +28,14 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       dissolution_date: '2021-09-07',
       restricted_for_marketing: nil,
       registered_address_in_full: 'registered address',
-      registered_address_country: 'country',
+      registered_address_country: 'country'
     )
   end
 
   let(:add_ids) do
     [
-      RegisterSourcesOc::AddId.new(jurisdiction_code: 'gb', company_number: '123456', identifier_system_code: 'lei', uid: '00MQKGBWLLX0RPPDO000'),
+      RegisterSourcesOc::AddId.new(jurisdiction_code: 'gb', company_number: '123456', identifier_system_code: 'lei',
+                                   uid: '00MQKGBWLLX0RPPDO000')
     ]
   end
 
@@ -49,7 +52,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         company_number:,
         name:,
         country:,
-        region:,
+        region:
       }.compact]
     end
 
@@ -59,11 +62,14 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       context 'with country existing' do
         let(:fetched_jurisdiction_code) { 'fetched_code' }
 
+        # rubocop:disable RSpec/ExpectInHook
         before do
           expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region: nil).and_return 'ca'
           expect(company_service).to receive(:get_company).and_return company
-          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca', company_number: }).and_return []
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca',
+                                                                         company_number: }).and_return []
         end
+        # rubocop:enable RSpec/ExpectInHook
 
         it 'returns resolved record' do
           result = subject.resolve(resolver_request)
@@ -78,10 +84,12 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       end
 
       context 'with country not matching a jurisdiction code' do
+        # rubocop:disable RSpec/ExpectInHook
         before do
           expect(company_service).not_to receive(:get_company)
           expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region: nil).and_return nil
         end
+        # rubocop:enable RSpec/ExpectInHook
 
         it 'retuns response with reconciled false' do
           result = subject.resolve(resolver_request)
@@ -98,11 +106,14 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       context 'with country and region' do
         let(:region) { 'region' }
 
+        # rubocop:disable RSpec/ExpectInHook
         before do
           expect(jurisdiction_code_service).to receive(:query_jurisdiction).with(country, region:).and_return 'ca'
           expect(company_service).to receive(:get_company).and_return company
-          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca', company_number: }).and_return []
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca',
+                                                                         company_number: }).and_return []
         end
+        # rubocop:enable RSpec/ExpectInHook
 
         it 'retuns response with reconciled false' do
           result = subject.resolve(resolver_request)
@@ -121,14 +132,16 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       let(:company_number) { nil }
 
       context 'without reconcilation_response' do
+        # rubocop:disable RSpec/ExpectInHook
         before do
           expect(reconciliation_service).to receive(:reconcile).with(
             RegisterSourcesOc::ReconciliationRequest.new(
               jurisdiction_code:,
-              name:,
-            ),
+              name:
+            )
           ).and_return double('reconcilation_response', reconciled: false)
         end
+        # rubocop:enable RSpec/ExpectInHook
 
         it 'returns unresolved record' do
           result = subject.resolve(resolver_request)
@@ -144,22 +157,25 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       context 'with reconcilation_response' do
         let(:reconciled_company_number) { '901233' }
 
+        # rubocop:disable RSpec/ExpectInHook
         before do
           expect(reconciliation_service).to receive(:reconcile).with(
             RegisterSourcesOc::ReconciliationRequest.new(
               jurisdiction_code:,
-              name:,
-            ),
+              name:
+            )
           ).and_return RegisterSourcesOc::ReconciliationResponse.new(
             jurisdiction_code:,
             company_number: reconciled_company_number,
             name:,
-            reconciled: true,
+            reconciled: true
           )
 
           expect(company_service).to receive(:get_company).and_return company
-          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:, company_number: '901233' }).and_return []
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:,
+                                                                         company_number: '901233' }).and_return []
         end
+        # rubocop:enable RSpec/ExpectInHook
 
         it 'uses reconciled company_number' do
           result = subject.resolve(resolver_request)
@@ -175,11 +191,14 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
     end
 
     context 'when get_company returns a company' do
+      # rubocop:disable RSpec/ExpectInHook
       before do
         expect(reconciliation_service).not_to receive(:reconcile)
         expect(company_service).to receive(:get_company).and_return company
-        expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:, company_number: }).and_return []
+        expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:,
+                                                                       company_number: }).and_return []
       end
+      # rubocop:enable RSpec/ExpectInHook
 
       it 'returns resolved record' do
         result = subject.resolve(resolver_request)
@@ -193,16 +212,21 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
     end
 
     context 'when get_company does not return a company' do
+      # rubocop:disable RSpec/ExpectInHook
       before do
         expect(reconciliation_service).not_to receive(:reconcile)
         expect(company_service).to receive(:get_company).and_return nil
       end
+      # rubocop:enable RSpec/ExpectInHook
 
       context 'with search_companies returning an empty list of companies' do
+        # rubocop:disable RSpec/ExpectInHook
         before do
           expect(company_service).to receive(:search_companies).and_return []
-          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:, company_number: }).and_return []
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:,
+                                                                         company_number: }).and_return []
         end
+        # rubocop:enable RSpec/ExpectInHook
 
         it 'returns resolved record' do
           result = subject.resolve(resolver_request)
@@ -216,10 +240,13 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       end
 
       context 'with search_companies returning a non-empty list of companies' do
+        # rubocop:disable RSpec/ExpectInHook
         before do
           expect(company_service).to receive(:search_companies).and_return [{ company: }]
-          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:, company_number: }).and_return []
+          expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:,
+                                                                         company_number: }).and_return []
         end
+        # rubocop:enable RSpec/ExpectInHook
 
         it 'returns resolved record' do
           result = subject.resolve(resolver_request)
@@ -234,13 +261,15 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
     end
 
     context 'when get_company returns a company with add_ids' do
+      # rubocop:disable RSpec/ExpectInHook
       before do
         expect(reconciliation_service).not_to receive(:reconcile)
         expect(company_service).to receive(:get_company).and_return company
         expect(add_id_repository).to receive(:search_by_number)
           .with({ jurisdiction_code:, company_number: })
-          .and_return add_ids.map { |e| RegisterSourcesOc::Repositories::AddIdRepository::SearchResult.new(e) }
+          .and_return(add_ids.map { |e| RegisterSourcesOc::Repositories::AddIdRepository::SearchResult.new(e) })
       end
+      # rubocop:enable RSpec/ExpectInHook
 
       it 'returns resolved record' do
         result = subject.resolve(resolver_request)

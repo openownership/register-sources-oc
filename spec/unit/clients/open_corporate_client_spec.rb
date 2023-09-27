@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/clients/open_corporate_client'
 
 RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
@@ -9,13 +11,13 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
       'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
       'Connection' => 'keep-alive',
       'Keep-Alive' => '30',
-      'User-Agent' => 'Faraday v1.9.3',
+      'User-Agent' => 'Faraday v1.9.3'
     }
   end
 
   let :mock_res_headers do
     {
-      'Content-Type' => 'application/json',
+      'Content-Type' => 'application/json'
     }
   end
 
@@ -25,7 +27,7 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
       open_timeout: 1.0,
       read_timeout: 1.0,
       raise_timeouts: false,
-      logger:,
+      logger:
     )
   end
 
@@ -35,10 +37,10 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
     stub
   end
 
-  shared_examples_for "response errors" do |log_text, empty_return_value|
-    context "when a response error is returned" do
+  shared_examples_for 'response errors' do |log_text, empty_return_value|
+    context 'when a response error is returned' do
       before do
-        @stub.to_return(status: 500)
+        stub.to_return(status: 500)
       end
 
       it 'logs response errors' do
@@ -51,9 +53,9 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
       end
     end
 
-    context "when a Faraday::ConnectionFailed error is raised" do
+    context 'when a Faraday::ConnectionFailed error is raised' do
       before do
-        @stub.to_raise(Faraday::ConnectionFailed)
+        stub.to_raise(Faraday::ConnectionFailed)
       end
 
       it 'logs response errors' do
@@ -66,7 +68,7 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
       end
     end
 
-    context "when an open timeout is raised" do
+    context 'when an open timeout is raised' do
       before do
         allow_any_instance_of(Net::HTTP).to receive(:start).and_raise(Net::OpenTimeout)
       end
@@ -81,12 +83,12 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
       end
     end
 
-    context "when a Faraday::Timeout error is raised" do
+    context 'when a Faraday::Timeout error is raised' do
       before do
-        @stub.to_raise(Faraday::TimeoutError)
+        stub.to_raise(Faraday::TimeoutError)
       end
 
-      context "when raise_timeouts is false" do
+      context 'when raise_timeouts is false' do
         it 'logs response errors' do
           expect(logger).to receive(:info).with(/Faraday::Timeout.*#{log_text}/)
           subject
@@ -97,14 +99,14 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
         end
       end
 
-      context "when raise_timeouts is true" do
+      context 'when raise_timeouts is true' do
         let :client do
           described_class.new(
             api_token:,
             open_timeout: 1.0,
             read_timeout: 1.0,
             raise_timeouts: true,
-            logger:,
+            logger:
           )
         end
 
@@ -119,16 +121,16 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
   describe '#get_jurisdiction_code' do
     subject { client.get_jurisdiction_code('United Kingdom') }
 
-    before do
-      url = "https://api.opencorporates.com/#{described_class::API_VERSION}/jurisdictions/match"
-      @stub = stub_request(:get, url).with(query: "q=United+Kingdom&api_token=#{api_token}", headers: mock_req_headers)
+    let(:url) { "https://api.opencorporates.com/#{described_class::API_VERSION}/jurisdictions/match" }
+    let(:stub) do
+      stub_request(:get, url).with(query: "q=United+Kingdom&api_token=#{api_token}", headers: mock_req_headers)
     end
 
-    include_examples "response errors", "United Kingdom", nil
+    include_examples 'response errors', 'United Kingdom', nil
 
-    context "when jurisdiction is matched" do
+    context 'when jurisdiction is matched' do
       before do
-        @stub.to_return(body: %({"results":{"jurisdiction":{"code":"gb"}}}), headers: mock_res_headers)
+        stub.to_return(body: %({"results":{"jurisdiction":{"code":"gb"}}}), headers: mock_res_headers)
       end
 
       it 'returns the jurisdiction code matching the given text' do
@@ -136,9 +138,9 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
       end
     end
 
-    context "when jurisdiction is not matched" do
+    context 'when jurisdiction is not matched' do
       before do
-        @stub.to_return(body: %({"results":{"jurisdiction":{}}}), headers: mock_res_headers)
+        stub.to_return(body: %({"results":{"jurisdiction":{}}}), headers: mock_res_headers)
       end
 
       it 'returns nil' do
@@ -148,22 +150,21 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
   end
 
   describe '#get_company' do
-    subject { client.get_company('gb', @number) }
+    subject { client.get_company('gb', number) }
 
-    before do
-      @number = '01234567'
-      @url = "https://api.opencorporates.com/#{described_class::API_VERSION}/companies/gb/"
-
-      @body = %({"results":{"company":{"name":"EXAMPLE LIMITED"}}})
-
-      @stub = stub_request(:get, URI.join(@url, @number)).with(query: "sparse=true&api_token=#{api_token}", headers: mock_req_headers)
+    let(:number) { '01234567' }
+    let(:url) { "https://api.opencorporates.com/#{described_class::API_VERSION}/companies/gb/" }
+    let(:body) { %({"results":{"company":{"name":"EXAMPLE LIMITED"}}}) }
+    let(:stub) do
+      stub_request(:get, URI.join(url, number)).with(query: "sparse=true&api_token=#{api_token}",
+                                                     headers: mock_req_headers)
     end
 
-    include_examples "response errors", "gb.*01234567", nil
+    include_examples 'response errors', 'gb.*01234567', nil
 
-    context "when the company with given jurisdiction_code and company_number is found" do
+    context 'when the company with given jurisdiction_code and company_number is found' do
       before do
-        @stub.to_return(body: @body, headers: mock_res_headers)
+        stub.to_return(body:, headers: mock_res_headers)
       end
 
       it 'returns company data' do
@@ -171,9 +172,15 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
       end
 
       context 'when company number contains square brackets' do
+        let(:number) { '123456[S]' }
+        let(:stub) do
+          stub_request(:get, url + number).with(query: "sparse=true&api_token=#{api_token}",
+                                                headers: mock_req_headers)
+        end
+
         before do
-          @number = '123456[S]'
-          stub_request(:get, @url + @number).with(query: "sparse=true&api_token=#{api_token}", headers: mock_req_headers).to_return(body: @body, headers: mock_res_headers)
+          stub.to_return(body:,
+                         headers: mock_res_headers)
         end
 
         it 'returns company data' do
@@ -182,25 +189,13 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
       end
     end
 
-    context "when the company cannot be found" do
+    context 'when the company cannot be found' do
       before do
-        @stub.to_return(status: 404)
+        stub.to_return(status: 404)
       end
 
       it 'returns nil' do
         expect(subject).to be_nil
-      end
-    end
-
-    context 'when called with sparse: false' do
-      subject { client.get_company('gb', '01234567', sparse: false) }
-
-      before do
-        stub_request(:get, URI.join(@url, @number)).with(query: "api_token=#{api_token}", headers: mock_req_headers).to_return(body: @body, headers: mock_res_headers)
-      end
-
-      it 'calls the endpoint without the sparse parameter' do
-        subject
       end
     end
   end
@@ -208,25 +203,24 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
   describe '#search_companies' do
     subject { client.search_companies('gb', '01234567') }
 
-    before do
-      url = "https://api.opencorporates.com/#{described_class::API_VERSION}/companies/search"
-
-      query = {
+    let(:url) { "https://api.opencorporates.com/#{described_class::API_VERSION}/companies/search" }
+    let(:query) do
+      {
         q: '01234567',
         jurisdiction_code: 'gb',
         fields: 'company_number',
         order: 'score',
-        api_token:,
+        api_token:
       }
-
-      @stub = stub_request(:get, url).with(query:, headers: mock_req_headers)
     end
+    let(:stub) { stub_request(:get, url).with(query:, headers: mock_req_headers) }
 
-    include_examples "response errors", "01234567.*gb", []
+    include_examples 'response errors', '01234567.*gb', []
 
-    context "when given jurisdiction_code and query returns results" do
+    context 'when given jurisdiction_code and query returns results' do
       before do
-        @stub.to_return(body: %({"results":{"companies":[{"company":{"name":"EXAMPLE LIMITED"}}]}}), headers: mock_res_headers)
+        stub.to_return(body: %({"results":{"companies":[{"company":{"name":"EXAMPLE LIMITED"}}]}}),
+                       headers: mock_res_headers)
       end
 
       it 'returns them' do
@@ -241,24 +235,23 @@ RSpec.describe RegisterSourcesOc::Clients::OpenCorporateClient do
   describe '#search_companies_by_name' do
     subject { client.search_companies_by_name('Example Ltd') }
 
-    before do
-      url = "https://api.opencorporates.com/#{described_class::API_VERSION}/companies/search"
-
-      query = {
+    let(:url) { "https://api.opencorporates.com/#{described_class::API_VERSION}/companies/search" }
+    let(:query) do
+      {
         q: 'Example Ltd',
         fields: 'company_name',
         order: 'score',
-        api_token:,
+        api_token:
       }
-
-      @stub = stub_request(:get, url).with(query:, headers: mock_req_headers)
     end
+    let(:stub) { stub_request(:get, url).with(query:, headers: mock_req_headers) }
 
-    include_examples "response errors", "Example Ltd", []
+    include_examples 'response errors', 'Example Ltd', []
 
-    context "when given name and query returns results" do
+    context 'when given name and query returns results' do
       before do
-        @stub.to_return(body: %({"results":{"companies":[{"company":{"name":"EXAMPLE LTD"}}]}}), headers: mock_res_headers)
+        stub.to_return(body: %({"results":{"companies":[{"company":{"name":"EXAMPLE LTD"}}]}}),
+                       headers: mock_res_headers)
       end
 
       it 'returns an array of results' do

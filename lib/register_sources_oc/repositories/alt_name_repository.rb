@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'digest'
 require 'json'
 require 'register_sources_oc/config/elasticsearch'
@@ -25,22 +27,22 @@ module RegisterSourcesOc
                     {
                       match: {
                         company_number: {
-                          query: company_number,
-                        },
-                      },
+                          query: company_number
+                        }
+                      }
                     },
                     {
                       match: {
                         jurisdiction_code: {
-                          query: jurisdiction_code,
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          ),
+                          query: jurisdiction_code
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          )
         )
       end
 
@@ -50,8 +52,8 @@ module RegisterSourcesOc
             index: {
               _index: index,
               _id: calculate_id(record),
-              data: record.to_h,
-            },
+              data: record.to_h
+            }
           }
         end
 
@@ -83,7 +85,7 @@ module RegisterSourcesOc
 
           SearchResult.new(
             AltName.new(**source),
-            hit['_score'],
+            hit['_score']
           )
         end
 

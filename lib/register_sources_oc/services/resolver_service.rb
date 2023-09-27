@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/repositories/add_id_repository'
 require 'register_sources_oc/services/company_service'
 require 'register_sources_oc/services/jurisdiction_code_service'
@@ -21,6 +23,7 @@ module RegisterSourcesOc
         @add_id_repository = add_id_repository
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def resolve(request)
         jurisdiction_code = request.jurisdiction_code
 
@@ -52,13 +55,11 @@ module RegisterSourcesOc
           company = response
         else
           response = company_service.search_companies(jurisdiction_code, company_number)
-          unless response.empty?
-            company = response.first.fetch(:company)
-          end
+          company = response.first.fetch(:company) unless response.empty?
         end
 
         add_ids = @add_id_repository.search_by_number(
-          jurisdiction_code:, company_number:,
+          jurisdiction_code:, company_number:
         ).map(&:record)
 
         ResolverResponse[{
@@ -67,9 +68,10 @@ module RegisterSourcesOc
           company_number:,
           reconciliation_response:,
           company:,
-          add_ids:,
+          add_ids:
         }.compact]
       end
+      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
       private
 
@@ -79,8 +81,8 @@ module RegisterSourcesOc
         reconciliation_service.reconcile(
           ReconciliationRequest.new(
             jurisdiction_code:,
-            name: request.name,
-          ),
+            name: request.name
+          )
         )
       end
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/structs/reconciliation_request'
 
 RSpec.describe RegisterSourcesOc::ReconciliationRequest do
@@ -7,7 +9,7 @@ RSpec.describe RegisterSourcesOc::ReconciliationRequest do
     let(:input_data) do
       {
         jurisdiction_code: 'gb',
-        name: 'company name',
+        name: 'company name'
       }
     end
 

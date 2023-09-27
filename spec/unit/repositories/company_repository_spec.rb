@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/repositories/company_repository'
 
 RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
@@ -20,19 +22,21 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
           bool: {
             must: [
               { match: { company_number: { query: 123_456 } } },
-              { match: { jurisdiction_code: { query: "gb" } } },
-            ],
-          },
-        },
+              { match: { jurisdiction_code: { query: 'gb' } } }
+            ]
+          }
+        }
       }
     end
 
+    # rubocop:disable RSpec/ExpectInHook
     before do
       expect(es_client).to receive(:search).with(
         index:,
-        body: query_body,
+        body: query_body
       ).and_return results
     end
+    # rubocop:enable RSpec/ExpectInHook
 
     context 'when has results' do
       let(:hits) do
@@ -47,10 +51,10 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
               dissolution_date: '5678',
               restricted_for_marketing: false,
               registered_address_in_full: 'registered_in_full',
-              registered_address_country: 'registered_country',
+              registered_address_country: 'registered_country'
             },
-            '_score' => 4.5,
-          },
+            '_score' => 4.5
+          }
         ]
       end
 
@@ -91,7 +95,7 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
     let(:records) do
       [
         fake_record_struct.new('gb1', 12_345, 's1'),
-        fake_record_struct.new('gb2', 12_346, 's2'),
+        fake_record_struct.new('gb2', 12_346, 's2')
       ]
     end
 
@@ -104,27 +108,27 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
         body: [
           {
             index: {
-              _id: "gb1:12345",
+              _id: 'gb1:12345',
               _index: index,
               data: {
                 company_number: 12_345,
-                jurisdiction_code: "gb1",
-                something: 's1',
-              },
-            },
+                jurisdiction_code: 'gb1',
+                something: 's1'
+              }
+            }
           },
           {
             index: {
-              _id: "gb2:12346",
+              _id: 'gb2:12346',
               _index: index,
               data: {
                 company_number: 12_346,
-                jurisdiction_code: "gb2",
-                something: 's2',
-              },
-            },
-          },
-        ],
+                jurisdiction_code: 'gb2',
+                something: 's2'
+              }
+            }
+          }
+        ]
       )
     end
   end

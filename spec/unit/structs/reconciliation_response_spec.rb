@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/structs/reconciliation_response'
 
 RSpec.describe RegisterSourcesOc::ReconciliationResponse do
@@ -9,7 +11,7 @@ RSpec.describe RegisterSourcesOc::ReconciliationResponse do
         reconciled: true,
         company_number: '123456',
         jurisdiction_code: 'gb',
-        name: 'company name',
+        name: 'company name'
       }
     end
 

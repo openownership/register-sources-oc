@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'elasticsearch'
 require 'register_sources_oc/repositories/company_repository'
 require 'register_sources_oc/services/es_index_creator'
@@ -12,7 +14,7 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
   before do
     index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
       companies_index: index,
-      client: es_client,
+      client: es_client
     )
     index_creator.create_companies_index
   end
@@ -29,8 +31,8 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
           dissolution_date: '2021-09-07',
           restricted_for_marketing: nil,
           registered_address_in_full: 'registered address',
-          registered_address_country: 'country',
-        ),
+          registered_address_country: 'country'
+        )
       ]
 
       subject.store(records)

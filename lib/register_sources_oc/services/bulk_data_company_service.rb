@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'elasticsearch'
 require 'register_sources_oc/repositories/company_repository'
 
@@ -28,7 +30,7 @@ module RegisterSourcesOc
 
         results = company_repository.get(
           jurisdiction_code:,
-          company_number:,
+          company_number:
         )
 
         return if results.empty?
@@ -46,7 +48,7 @@ module RegisterSourcesOc
 
         results = company_repository.search_by_number(
           jurisdiction_code:,
-          company_number:,
+          company_number:
         )
 
         return if results.empty?

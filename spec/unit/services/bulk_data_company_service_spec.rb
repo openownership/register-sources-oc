@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/services/bulk_data_company_service'
 
 RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
@@ -5,7 +7,7 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
     described_class.new(
       company_repository:,
       jurisdiction_codes:,
-      repository_enabled:,
+      repository_enabled:
     )
   end
 
@@ -48,16 +50,18 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       let(:results) do
         [
           double(record: { r1: 'r1' }, score: 5.6),
-          double(record: { r2: 'r2' }, score: 5.2),
+          double(record: { r2: 'r2' }, score: 5.2)
         ]
       end
 
+      # rubocop:disable RSpec/ExpectInHook
       before do
         expect(company_repository).to receive(:get).with(
           jurisdiction_code:,
-          company_number:,
+          company_number:
         ).and_return results
       end
+      # rubocop:enable RSpec/ExpectInHook
 
       context 'with jurisdiction_code the upper-case of a valid jurisdiction' do
         it 'returns record of first result' do
@@ -110,16 +114,18 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       let(:results) do
         [
           double(record: { r1: 'r1' }, score: 5.6),
-          double(record: { r2: 'r2' }, score: 5.2),
+          double(record: { r2: 'r2' }, score: 5.2)
         ]
       end
 
+      # rubocop:disable RSpec/ExpectInHook
       before do
         expect(company_repository).to receive(:search_by_number).with(
           jurisdiction_code:,
-          company_number:,
+          company_number:
         ).and_return results
       end
+      # rubocop:enable RSpec/ExpectInHook
 
       context 'with results empty' do
         let(:results) { [] }
@@ -134,7 +140,7 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
         it 'returns record of first result' do
           result = subject.search_companies(jurisdiction_code, company_number)
           expect(result).to eq [
-            { company: { r1: 'r1' } },
+            { company: { r1: 'r1' } }
           ]
         end
       end
@@ -157,15 +163,17 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
       let(:results) do
         [
           double(record: { r1: 'r1' }, score: 5.6),
-          double(record: { r2: 'r2' }, score: 5.2),
+          double(record: { r2: 'r2' }, score: 5.2)
         ]
       end
 
+      # rubocop:disable RSpec/ExpectInHook
       before do
         expect(company_repository).to receive(:search_by_name).with(
-          name,
+          name
         ).and_return results
       end
+      # rubocop:enable RSpec/ExpectInHook
 
       context 'with results empty' do
         let(:results) { [] }
@@ -180,7 +188,7 @@ RSpec.describe RegisterSourcesOc::Services::BulkDataCompanyService do
         it 'returns record of first result' do
           result = subject.search_companies_by_name(name)
           expect(result).to eq [
-            { company: { r1: 'r1' } },
+            { company: { r1: 'r1' } }
           ]
         end
       end

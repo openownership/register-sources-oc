@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/structs/resolver_request'
 
 RSpec.describe RegisterSourcesOc::ResolverRequest do
@@ -9,7 +11,7 @@ RSpec.describe RegisterSourcesOc::ResolverRequest do
         company_number: '123456',
         jurisdiction_code: 'gb',
         country: 'country',
-        name: 'company name',
+        name: 'company name'
       }
     end
 

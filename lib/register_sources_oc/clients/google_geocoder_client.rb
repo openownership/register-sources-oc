@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'geokit'
 
 require 'register_sources_oc/structs/geocoder_response'
@@ -24,7 +26,7 @@ module RegisterSourcesOc
           country: result.country,
           country_code: result.country_code.downcase,
           state: result.state_name,
-          state_code: result.state_code&.downcase,
+          state_code: result.state_code&.downcase
         )
       rescue StandardError => e
         error_adapter&.error(e)

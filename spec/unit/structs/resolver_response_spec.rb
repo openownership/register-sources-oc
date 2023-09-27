@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/structs/resolver_response'
 
 RSpec.describe RegisterSourcesOc::ResolverResponse do
@@ -11,7 +13,7 @@ RSpec.describe RegisterSourcesOc::ResolverResponse do
           reconciled: true,
           company_number: '123456',
           jurisdiction_code: 'gb',
-          name: 'company name',
+          name: 'company name'
         },
         company: {
           company_number: '123456',
@@ -22,8 +24,8 @@ RSpec.describe RegisterSourcesOc::ResolverResponse do
           dissolution_date: '2021-09-07',
           restricted_for_marketing: nil,
           registered_address_in_full: 'registered address',
-          registered_address_country: 'country',
-        },
+          registered_address_country: 'country'
+        }
       }
     end
 

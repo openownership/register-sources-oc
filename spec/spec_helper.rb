@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-unless ENV['TEST'].to_i == 1
-  raise 'not test env!'
-end
+raise 'not test env!' unless ENV['TEST'].to_i == 1
 
-require "register_sources_oc"
+require 'register_sources_oc'
 require 'webmock/rspec'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = ".rspec_status"
+  config.example_status_persistence_file_path = '.rspec_status'
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
@@ -25,7 +23,7 @@ RSpec.configure do |config|
     allow_localhost: true,
     allow: [
       'chromedriver.storage.googleapis.com',
-      'elasticsearch',
-    ],
+      'elasticsearch'
+    ]
   )
 end

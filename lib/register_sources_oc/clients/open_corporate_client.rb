@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/http/persistent'
 require 'logger'
 require 'json'
@@ -9,7 +11,7 @@ require 'active_support'
 module RegisterSourcesOc
   module Clients
     class OpenCorporateClient
-      API_VERSION = 'v0.4.6'.freeze
+      API_VERSION = 'v0.4.6'
       CACHE_EXPIRY_SECS = 60 * 60 * 24 * 31 # 31.days.to_i
 
       class TimeoutError < StandardError
@@ -21,7 +23,7 @@ module RegisterSourcesOc
           open_timeout: 30.0,
           read_timeout: 60.0,
           enable_retries: true,
-          raise_timeouts: false,
+          raise_timeouts: false
         )
       end
 
@@ -31,10 +33,11 @@ module RegisterSourcesOc
           open_timeout: timeout,
           read_timeout: timeout,
           enable_retries: false,
-          raise_timeouts: true,
+          raise_timeouts: true
         )
       end
 
+      # rubocop:disable Metrics/ParameterLists
       def initialize(
         api_token:,
         open_timeout:,
@@ -47,7 +50,7 @@ module RegisterSourcesOc
         @api_token = api_token
         @raise_timeouts = raise_timeouts
 
-        @connection = Faraday.new(url: "https://api.opencorporates.com") do |c|
+        @connection = Faraday.new(url: 'https://api.opencorporates.com') do |c|
           c.request :json
           c.response :follow_redirects
 
@@ -62,7 +65,7 @@ module RegisterSourcesOc
                         Net::OpenTimeout,
                         'Timeout::Error',
                         Faraday::RetriableResponse,
-                        Faraday::TimeoutError,
+                        Faraday::TimeoutError
                       ]
           end
 
@@ -75,6 +78,7 @@ module RegisterSourcesOc
           end
         end
       end
+      # rubocop:enable Metrics/ParameterLists
 
       def get_jurisdiction_code(name)
         response = get('/jurisdictions/match', q: name)
@@ -100,7 +104,7 @@ module RegisterSourcesOc
           q: company_number,
           jurisdiction_code:,
           fields: 'company_number',
-          order: 'score',
+          order: 'score'
         }
 
         response = get('/companies/search', params)
@@ -114,7 +118,7 @@ module RegisterSourcesOc
         params = {
           q: name,
           fields: 'company_name',
-          order: 'score',
+          order: 'score'
         }
 
         response = get('/companies/search', params)
@@ -140,7 +144,7 @@ module RegisterSourcesOc
         if response.success?
           response.body.fetch(:results)
         else
-          logger.info("Received #{response.status} from api.opencorporates.com when calling #{normalised_path} (#{params})")
+          logger.info("Received #{response.status} from api.opencorporates.com when calling #{normalised_path} (#{params})") # rubocop:disable Layout/LineLength
           nil
         end
       rescue Faraday::ConnectionFailed => e
