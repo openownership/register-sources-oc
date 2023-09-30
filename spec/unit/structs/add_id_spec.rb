@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/structs/add_id'
 
 RSpec.describe RegisterSourcesOc::AddId do
@@ -9,7 +11,7 @@ RSpec.describe RegisterSourcesOc::AddId do
         company_number: '123456',
         jurisdiction_code: 'gb',
         uid: 'uid',
-        identifier_system_code: 'identifier_system_code',
+        identifier_system_code: 'identifier_system_code'
       }
     end
 

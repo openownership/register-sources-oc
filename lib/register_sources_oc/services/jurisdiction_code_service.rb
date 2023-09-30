@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/clients/open_corporate_client'
 require 'register_sources_oc/clients/google_geocoder_client'
 
 module RegisterSourcesOc
   module Services
     class JurisdictionCodeService
-      def initialize(geocoder_client: Clients::GoogleGeocoderClient.new, open_corporate_client: Clients::OpenCorporateClient.new_for_imports)
+      def initialize(geocoder_client: Clients::GoogleGeocoderClient.new,
+                     open_corporate_client: Clients::OpenCorporateClient.new_for_imports)
         @geocoder_client = geocoder_client
         @open_corporate_client = open_corporate_client
         @cache = {}
@@ -27,7 +30,7 @@ module RegisterSourcesOc
       attr_reader :geocoder_client, :open_corporate_client, :cache
 
       def query_jurisdiction_no_cache(country, region: nil)
-        jurisdiction_response = geocoder_client.jurisdiction([region, country].compact.map(&:to_s).join(", "))
+        jurisdiction_response = geocoder_client.jurisdiction([region, country].compact.map(&:to_s).join(', '))
         jurisdiction_code = nil
 
         if jurisdiction_response

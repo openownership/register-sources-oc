@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'elasticsearch'
 require 'register_sources_oc/repositories/alt_name_repository'
 require 'register_sources_oc/services/es_index_creator'
@@ -12,7 +14,7 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
   before do
     index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
       alt_names_index: index,
-      client: es_client,
+      client: es_client
     )
     index_creator.create_alt_names_index
   end
@@ -26,8 +28,8 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
           name: 'name',
           type: 'type',
           start_date: '2020-07-06',
-          end_date: '2021-02-27',
-        ),
+          end_date: '2021-02-27'
+        )
       ]
 
       subject.store(records)

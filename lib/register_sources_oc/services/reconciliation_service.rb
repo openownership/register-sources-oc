@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/clients/reconciliation_client'
 require 'register_sources_oc/structs/reconciliation_response'
 
@@ -17,7 +19,7 @@ module RegisterSourcesOc
           reconciled: !response.nil?,
           jurisdiction_code: request.jurisdiction_code,
           name: request.name,
-          company_number:,
+          company_number:
         )
       end
 

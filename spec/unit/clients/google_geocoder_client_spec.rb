@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/clients/google_geocoder_client'
 
 RSpec.describe RegisterSourcesOc::Clients::GoogleGeocoderClient do
@@ -22,17 +24,18 @@ RSpec.describe RegisterSourcesOc::Clients::GoogleGeocoderClient do
           result = subject.jurisdiction address_string
 
           expect(result).to eq RegisterSourcesOc::GeocoderResponse.new(
-            country: "Canada",
-            country_code: "ca",
-            state: "Prince Edward Island",
-            state_code: "pe",
+            country: 'Canada',
+            country_code: 'ca',
+            state: 'Prince Edward Island',
+            state_code: 'pe'
           )
         end
       end
 
       context 'with result unsuccessful' do
         let(:geocode_response) do
-          double(state_name: 'Prince Edward Island', state_code: 'PE', country: 'Canada', country_code: 'CA', success?: false)
+          double(state_name: 'Prince Edward Island', state_code: 'PE', country: 'Canada', country_code: 'CA',
+                 success?: false)
         end
 
         it 'returns nil' do
@@ -58,7 +61,8 @@ RSpec.describe RegisterSourcesOc::Clients::GoogleGeocoderClient do
     context 'when raises an error' do
       let(:geocode_response) do
         # This should error since country_code is nil and will try downcase
-        double(state_name: 'Prince Edward Island', state_code: 'PE', country: 'Canada', country_code: nil, success?: true)
+        double(state_name: 'Prince Edward Island', state_code: 'PE', country: 'Canada', country_code: nil,
+               success?: true)
       end
 
       context 'with error adapter nil' do

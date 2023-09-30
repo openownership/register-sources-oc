@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'elasticsearch'
 require 'register_sources_oc/repositories/company_repository'
 
@@ -20,6 +22,7 @@ module RegisterSourcesOc
         nil # not supported - fall through
       end
 
+      # rubocop:disable Lint/UnusedMethodArgument
       def get_company(jurisdiction_code, company_number, sparse: true)
         return unless repository_enabled && jurisdiction_code
 
@@ -28,7 +31,7 @@ module RegisterSourcesOc
 
         results = company_repository.get(
           jurisdiction_code:,
-          company_number:,
+          company_number:
         )
 
         return if results.empty?
@@ -37,6 +40,7 @@ module RegisterSourcesOc
       rescue Elasticsearch::Transport::Transport::Errors::BadRequest
         nil # fall through to next service
       end
+      # rubocop:enable Lint/UnusedMethodArgument
 
       def search_companies(jurisdiction_code, company_number)
         return unless repository_enabled && jurisdiction_code
@@ -46,7 +50,7 @@ module RegisterSourcesOc
 
         results = company_repository.search_by_number(
           jurisdiction_code:,
-          company_number:,
+          company_number:
         )
 
         return if results.empty?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/services/jurisdiction_code_service'
 
 RSpec.describe RegisterSourcesOc::Services::JurisdictionCodeService do
@@ -20,7 +22,7 @@ RSpec.describe RegisterSourcesOc::Services::JurisdictionCodeService do
       it 'resolves using country' do
         expect(geocoder_client).to receive(:jurisdiction).with('CA').and_return double(
           state: nil,
-          country: 'Canada',
+          country: 'Canada'
         )
         expect(open_corporate_client).to receive(:get_jurisdiction_code).with('Canada').and_return 'ca'
 
@@ -35,9 +37,10 @@ RSpec.describe RegisterSourcesOc::Services::JurisdictionCodeService do
         it 'uses country and state to obtain jurisdiction code' do
           expect(geocoder_client).to receive(:jurisdiction).with('Prince Edward Island C1, CA').and_return double(
             state: 'Prince Edward Island',
-            country: 'Canada',
+            country: 'Canada'
           )
-          expect(open_corporate_client).to receive(:get_jurisdiction_code).with('Prince Edward Island').and_return 'ca_pe'
+          expect(open_corporate_client).to receive(:get_jurisdiction_code)
+            .with('Prince Edward Island').and_return 'ca_pe'
 
           jurisdiction_code = subject.query_jurisdiction(country, region:)
 
@@ -49,7 +52,7 @@ RSpec.describe RegisterSourcesOc::Services::JurisdictionCodeService do
         it 'uses country to obtain jurisdiction code' do
           expect(geocoder_client).to receive(:jurisdiction).with('Prince Edward Island C1, CA').and_return double(
             state: nil,
-            country: 'Canada',
+            country: 'Canada'
           )
           expect(open_corporate_client).to receive(:get_jurisdiction_code).with('Canada').and_return 'ca'
 
@@ -63,7 +66,7 @@ RSpec.describe RegisterSourcesOc::Services::JurisdictionCodeService do
         it 'uses country to obtain jurisdiction code' do
           expect(geocoder_client).to receive(:jurisdiction).with('Prince Edward Island C1, CA').and_return double(
             state: nil,
-            country: nil,
+            country: nil
           )
           expect(open_corporate_client).to receive(:get_jurisdiction_code).with('CA').and_return 'ca'
 
@@ -89,7 +92,7 @@ RSpec.describe RegisterSourcesOc::Services::JurisdictionCodeService do
       it 'uses the cache instead of calling geocoder and opencorporates twice' do
         allow(geocoder_client).to receive(:jurisdiction).with('Prince Edward Island C1, CA').and_return double(
           state: 'Prince Edward Island',
-          country: 'Canada',
+          country: 'Canada'
         )
         allow(open_corporate_client).to receive(:get_jurisdiction_code).with('Prince Edward Island').and_return 'ca_pe'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'elasticsearch'
 require 'register_sources_oc/repositories/add_id_repository'
 require 'register_sources_oc/services/es_index_creator'
@@ -12,7 +14,7 @@ RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
   before do
     index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
       add_ids_index: index,
-      client: es_client,
+      client: es_client
     )
     index_creator.create_add_ids_index
   end
@@ -24,8 +26,8 @@ RSpec.describe RegisterSourcesOc::Repositories::AddIdRepository do
           company_number: '123456',
           jurisdiction_code: 'gb',
           uid: 'uid',
-          identifier_system_code: 'identifier_system_code',
-        ),
+          identifier_system_code: 'identifier_system_code'
+        )
       ]
 
       subject.store(records)

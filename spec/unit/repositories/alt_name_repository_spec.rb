@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/repositories/alt_name_repository'
 
 RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
@@ -20,19 +22,21 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
           bool: {
             must: [
               { match: { company_number: { query: 123_456 } } },
-              { match: { jurisdiction_code: { query: "gb" } } },
-            ],
-          },
-        },
+              { match: { jurisdiction_code: { query: 'gb' } } }
+            ]
+          }
+        }
       }
     end
 
+    # rubocop:disable RSpec/ExpectInHook
     before do
       expect(es_client).to receive(:search).with(
         index:,
-        body: query_body,
+        body: query_body
       ).and_return results
     end
+    # rubocop:enable RSpec/ExpectInHook
 
     context 'when has results' do
       let(:hits) do
@@ -44,17 +48,17 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
               name: 'name',
               type: 'type',
               start_date: '2020-07-06',
-              end_date: '2021-02-27',
+              end_date: '2021-02-27'
             },
-            '_score' => 4.5,
-          },
+            '_score' => 4.5
+          }
         ]
       end
 
       it 'searches elasticsearch' do
         results = subject.search_by_number(
           jurisdiction_code:,
-          company_number:,
+          company_number:
         )
 
         expect(results.length).to eq 1
@@ -79,7 +83,7 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
       it 'searches elasticsearch and returns empty results' do
         results = subject.search_by_number(
           jurisdiction_code:,
-          company_number:,
+          company_number:
         )
 
         expect(results).to eq []
@@ -91,7 +95,7 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
     let(:records) do
       [
         fake_record_struct.new('gb1', 12_345, 's1'),
-        fake_record_struct.new('gb2', 12_346, 's2'),
+        fake_record_struct.new('gb2', 12_346, 's2')
       ]
     end
 
@@ -104,27 +108,27 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
         body: [
           {
             index: {
-              _id: "gb1:12345:EMZsjw5KCNXDM3AyiNg2tKnVMPx38Yaa",
+              _id: 'gb1:12345:EMZsjw5KCNXDM3AyiNg2tKnVMPx38Yaa',
               _index: index,
               data: {
                 company_number: 12_345,
-                jurisdiction_code: "gb1",
-                something: 's1',
-              },
-            },
+                jurisdiction_code: 'gb1',
+                something: 's1'
+              }
+            }
           },
           {
             index: {
-              _id: "gb2:12346:S9tVgUGFPq4KPo7UrcYPVZ/wa2LqcsGQ",
+              _id: 'gb2:12346:S9tVgUGFPq4KPo7UrcYPVZ/wa2LqcsGQ',
               _index: index,
               data: {
                 company_number: 12_346,
-                jurisdiction_code: "gb2",
-                something: 's2',
-              },
-            },
-          },
-        ],
+                jurisdiction_code: 'gb2',
+                something: 's2'
+              }
+            }
+          }
+        ]
       )
     end
   end

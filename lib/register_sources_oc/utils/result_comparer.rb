@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RegisterSourcesOc
   module Utils
     class ResultComparer
@@ -18,7 +20,7 @@ module RegisterSourcesOc
               service1:,
               response1: incorrect1,
               service2:,
-              response2: incorrect2,
+              response2: incorrect2
             }
           end
         end
@@ -28,6 +30,7 @@ module RegisterSourcesOc
 
       private
 
+      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def get_non_matching_fields(response1, response2)
         if response1.is_a?(Array) != response2.is_a?(Array)
           response1
@@ -44,14 +47,13 @@ module RegisterSourcesOc
             next if k == :registered_address_country
             next if response1[k] == response2[k]
 
-            if k == :registered_address_in_full && (response1[k].strip == response2[k].strip)
-              next
-            end
+            next if k == :registered_address_in_full && (response1[k].strip == response2[k].strip)
 
             [k, response1[k]]
           end.compact.to_h
         end
       end
+      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     end
   end
 end

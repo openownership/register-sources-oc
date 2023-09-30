@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/services/oc_api_company_service'
 
 RSpec.describe RegisterSourcesOc::Services::OcApiCompanyService do
@@ -15,12 +17,12 @@ RSpec.describe RegisterSourcesOc::Services::OcApiCompanyService do
       dissolution_date: 'a6',
       registered_address_country: nil,
       restricted_for_marketing: 'a7',
-      registered_address_in_full: 'a8',
+      registered_address_in_full: 'a8'
     }
   end
   let(:oc_company) do
     expected_company.merge(
-      some_other_field: 'a9',
+      some_other_field: 'a9'
     )
   end
 
@@ -30,7 +32,7 @@ RSpec.describe RegisterSourcesOc::Services::OcApiCompanyService do
 
       expected_response = double('expected_response')
       expect(open_corporate_client).to receive(:get_jurisdiction_code).with(
-        name,
+        name
       ).and_return expected_response
 
       response = subject.get_jurisdiction_code name
@@ -47,7 +49,7 @@ RSpec.describe RegisterSourcesOc::Services::OcApiCompanyService do
       expect(open_corporate_client).to receive(:get_company).with(
         jurisdiction_code,
         company_number,
-        sparse:,
+        sparse:
       ).and_return oc_company
 
       response = subject.get_company(jurisdiction_code, company_number, sparse:)
@@ -66,7 +68,7 @@ RSpec.describe RegisterSourcesOc::Services::OcApiCompanyService do
 
       expect(open_corporate_client).to receive(:search_companies).with(
         jurisdiction_code,
-        company_number,
+        company_number
       ).and_return expected_response
 
       response = subject.search_companies(jurisdiction_code, company_number)
@@ -83,7 +85,7 @@ RSpec.describe RegisterSourcesOc::Services::OcApiCompanyService do
       name = double 'name'
 
       expect(open_corporate_client).to receive(:search_companies_by_name).with(
-        name,
+        name
       ).and_return expected_response
 
       response = subject.search_companies_by_name(name)

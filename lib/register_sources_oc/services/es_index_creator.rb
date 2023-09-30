@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/config/elasticsearch'
 
 module RegisterSourcesOc
@@ -20,44 +22,44 @@ module RegisterSourcesOc
           mappings: {
             properties: {
               company_number: {
-                type: "keyword",
+                type: 'keyword'
               },
               jurisdiction_code: {
-                type: "keyword",
+                type: 'keyword'
               },
               name: {
-                type: "text",
+                type: 'text',
                 fields: {
                   raw: {
-                    type: "keyword",
-                  },
-                },
+                    type: 'keyword'
+                  }
+                }
               },
               company_type: {
-                type: "keyword",
+                type: 'keyword'
               },
               incorporation_date: {
-                type: "keyword",
+                type: 'keyword'
               },
               dissolution_date: {
-                type: "keyword",
+                type: 'keyword'
               },
               restricted_for_marketing: {
-                type: "boolean",
+                type: 'boolean'
               },
               registered_address_in_full: {
-                type: "text",
+                type: 'text',
                 fields: {
                   raw: {
-                    type: "keyword",
-                  },
-                },
+                    type: 'keyword'
+                  }
+                }
               },
               registered_address_country: {
-                type: "keyword",
-              },
-            },
-          },
+                type: 'keyword'
+              }
+            }
+          }
         }
       end
 
@@ -66,19 +68,19 @@ module RegisterSourcesOc
           mappings: {
             properties: {
               company_number: {
-                type: "keyword",
+                type: 'keyword'
               },
               jurisdiction_code: {
-                type: "keyword",
+                type: 'keyword'
               },
               uid: {
-                type: "keyword",
+                type: 'keyword'
               },
               identifier_system_code: {
-                type: "keyword",
-              },
-            },
-          },
+                type: 'keyword'
+              }
+            }
+          }
         }
       end
 
@@ -87,30 +89,30 @@ module RegisterSourcesOc
           mappings: {
             properties: {
               company_number: {
-                type: "keyword",
+                type: 'keyword'
               },
               jurisdiction_code: {
-                type: "keyword",
+                type: 'keyword'
               },
               name: {
-                type: "text",
+                type: 'text',
                 fields: {
                   raw: {
-                    type: "keyword",
-                  },
-                },
+                    type: 'keyword'
+                  }
+                }
               },
               type: {
-                type: "keyword",
+                type: 'keyword'
               },
               start_date: {
-                type: "keyword",
+                type: 'keyword'
               },
               end_date: {
-                type: "keyword",
-              },
-            },
-          },
+                type: 'keyword'
+              }
+            }
+          }
         }
       end
 

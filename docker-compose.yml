@@ -10,8 +10,8 @@ services:
       - sources
     restart: on-failure
     volumes:
+      - ./.rubocop.yml:/home/x/r/.rubocop.yml
       - ./bin:/home/x/r/bin
-      - ./config:/home/x/r/config
       - ./Gemfile.lock:/home/x/r/Gemfile.lock
       - ./Gemfile:/home/x/r/Gemfile
       - ./lib:/home/x/r/lib

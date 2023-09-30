@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register_sources_oc/structs/alt_name'
 
 RSpec.describe RegisterSourcesOc::AltName do
@@ -11,7 +13,7 @@ RSpec.describe RegisterSourcesOc::AltName do
         name: 'name',
         type: 'type',
         start_date: '2020-07-06',
-        end_date: '2021-02-27',
+        end_date: '2021-02-27'
       }
     end
 
