@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
-require 'register_sources_oc/utils/result_comparer'
-
+require_relative '../utils/result_comparer'
 require_relative 'bulk_data_company_service'
 require_relative 'oc_api_company_service'
 
 module RegisterSourcesOc
   module Services
     class CompanyService
-      InconsistentResponseError = Class.new(StandardError)
-
-      # services: [ { name: 'bulk', service: bulk_service }, { name: 'oc_api', service: oc_api_service }]
       def initialize(services: nil, verbose: false, comparison_mode: false, comparer: nil)
         @services = services || [
           { name: 'bulk', service: BulkDataCompanyService.new },

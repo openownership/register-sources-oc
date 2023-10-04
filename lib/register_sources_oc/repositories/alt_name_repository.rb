@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
+require 'active_support/core_ext/hash/indifferent_access'
 require 'digest'
 require 'json'
-require 'register_sources_oc/config/elasticsearch'
-require 'register_sources_oc/structs/alt_name'
-require 'active_support/core_ext/hash/indifferent_access'
+
+require_relative '../config/elasticsearch'
+require_relative '../structs/alt_name'
 
 module RegisterSourcesOc
   module Repositories
     class AltNameRepository
       SearchResult = Struct.new(:record, :score)
 
-      def initialize(client: Config::ELASTICSEARCH_CLIENT, index: Config::ES_ALT_NAMES_INDEX)
+      def initialize(client: Config::ELASTICSEARCH_CLIENT, index: Config::ELASTICSEARCH_INDEX_ALT_NAMES)
         @client = client
         @index = index
       end

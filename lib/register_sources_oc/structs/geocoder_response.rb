@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
-require 'dry-types'
-require 'dry-struct'
+require_relative '../types'
 
 module RegisterSourcesOc
-  module Types
-    include Dry.Types()
-  end
-
   class GeocoderResponse < Dry::Struct
     transform_keys(&:to_sym)
 
-    attribute? :country, Types::String
+    attribute? :country,      Types::String
     attribute? :country_code, Types::String
-    attribute? :state, Types::String.optional
-    attribute? :state_code, Types::String.optional
+    attribute? :state,        Types::String.optional
+    attribute? :state_code,   Types::String.optional
   end
 end

@@ -4,10 +4,9 @@ require 'elasticsearch'
 
 module RegisterSourcesOc
   module Config
-    ELASTICSEARCH_CLIENT = Elasticsearch::Client.new
-
-    ES_ADD_IDS_INDEX   = 'add_ids'
-    ES_ALT_NAMES_INDEX = 'alt_names'
-    ES_COMPANIES_INDEX = 'companies'
+    ELASTICSEARCH_CLIENT          = Elasticsearch::Client.new
+    ELASTICSEARCH_INDEX_ADD_IDS   = 'add_ids'
+    ELASTICSEARCH_INDEX_ALT_NAMES = 'alt_names'
+    ELASTICSEARCH_INDEX_COMPANIES = 'companies'
   end
 end

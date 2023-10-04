@@ -2,15 +2,16 @@
 
 require 'forwardable'
 
-require 'register_sources_oc/clients/open_corporate_client'
+require_relative '../clients/open_corporate_client'
 
 module RegisterSourcesOc
   module Services
     class OcApiCompanyService
-      FIELDS = %i[company_number jurisdiction_code name company_type incorporation_date dissolution_date
-                  restricted_for_marketing registered_address_in_full registered_address_country].freeze
-
       extend Forwardable
+
+      FIELDS = %i[company_number jurisdiction_code name company_type
+                  incorporation_date dissolution_date restricted_for_marketing
+                  registered_address_in_full registered_address_country].freeze
 
       def_delegators :@open_corporate_client, :get_jurisdiction_code
 

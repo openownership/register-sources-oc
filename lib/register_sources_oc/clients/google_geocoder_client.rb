@@ -2,7 +2,7 @@
 
 require 'geokit'
 
-require 'register_sources_oc/structs/geocoder_response'
+require_relative '../structs/geocoder_response'
 
 module RegisterSourcesOc
   module Clients

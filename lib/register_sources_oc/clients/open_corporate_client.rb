@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
-require 'net/http/persistent'
-require 'logger'
-require 'json'
+require 'active_support'
 require 'addressable'
 require 'faraday'
 require 'faraday_middleware'
-require 'active_support'
+require 'json'
+require 'logger'
+require 'net/http/persistent'
 
 module RegisterSourcesOc
   module Clients
     class OpenCorporateClient
-      API_VERSION = 'v0.4.6'
-      CACHE_EXPIRY_SECS = 60 * 60 * 24 * 31 # 31.days.to_i
+      TimeoutError = Class.new(StandardError)
 
-      class TimeoutError < StandardError
-      end
+      API_VERSION = 'v0.4.6'
 
       def self.new_for_imports
         new(
