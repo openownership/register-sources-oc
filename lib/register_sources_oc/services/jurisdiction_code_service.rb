@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'register_sources_oc/clients/open_corporate_client'
-require 'register_sources_oc/clients/google_geocoder_client'
+require_relative '../clients/google_geocoder_client'
+require_relative '../clients/open_corporate_client'
 
 module RegisterSourcesOc
   module Services

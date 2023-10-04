@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'register_sources_oc/repositories/add_id_repository'
-require 'register_sources_oc/services/company_service'
-require 'register_sources_oc/services/jurisdiction_code_service'
-require 'register_sources_oc/services/reconciliation_service'
-require 'register_sources_oc/structs/reconciliation_request'
-require 'register_sources_oc/structs/resolver_request'
-require 'register_sources_oc/structs/resolver_response'
+require_relative '../repositories/add_id_repository'
+require_relative '../structs/reconciliation_request'
+require_relative '../structs/resolver_request'
+require_relative '../structs/resolver_response'
+require_relative 'company_service'
+require_relative 'jurisdiction_code_service'
+require_relative 'reconciliation_service'
 
 module RegisterSourcesOc
   module Services

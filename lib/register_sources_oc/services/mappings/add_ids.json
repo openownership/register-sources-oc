@@ -1,0 +1,16 @@
+{
+  "properties": {
+    "company_number": {
+      "type": "keyword"
+    },
+    "jurisdiction_code": {
+      "type": "keyword"
+    },
+    "uid": {
+      "type": "keyword"
+    },
+    "identifier_system_code": {
+      "type": "keyword"
+    }
+  }
+}

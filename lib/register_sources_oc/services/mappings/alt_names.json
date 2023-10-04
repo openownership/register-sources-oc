@@ -1,0 +1,27 @@
+{
+  "properties": {
+    "company_number": {
+      "type": "keyword"
+    },
+    "jurisdiction_code": {
+      "type": "keyword"
+    },
+    "name": {
+      "type": "text",
+      "fields": {
+        "raw": {
+          "type": "keyword"
+        }
+      }
+    },
+    "type": {
+      "type": "keyword"
+    },
+    "start_date": {
+      "type": "keyword"
+    },
+    "end_date": {
+      "type": "keyword"
+    }
+  }
+}

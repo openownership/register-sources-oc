@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
+require 'active_support/core_ext/hash/indifferent_access'
 require 'digest'
 require 'json'
-require 'register_sources_oc/config/elasticsearch'
-require 'register_sources_oc/structs/company'
-require 'active_support/core_ext/hash/indifferent_access'
+
+require_relative '../config/elasticsearch'
+require_relative '../structs/company'
 
 module RegisterSourcesOc
   module Repositories
     class CompanyRepository
       SearchResult = Struct.new(:record, :score)
 
-      def initialize(client: Config::ELASTICSEARCH_CLIENT, index: Config::ES_COMPANIES_INDEX)
+      def initialize(client: Config::ELASTICSEARCH_CLIENT, index: Config::ELASTICSEARCH_INDEX_COMPANIES)
         @client = client
         @index = index
       end

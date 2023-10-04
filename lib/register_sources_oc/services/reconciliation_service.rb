@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'register_sources_oc/clients/reconciliation_client'
-require 'register_sources_oc/structs/reconciliation_response'
+require_relative '../clients/reconciliation_client'
+require_relative '../structs/reconciliation_response'
 
 module RegisterSourcesOc
   module Services

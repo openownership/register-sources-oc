@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-require 'net/http/persistent'
 require 'cgi'
 require 'json'
 require 'logger'
+require 'net/http/persistent'
 
 module RegisterSourcesOc
   module Clients
     class ReconciliationClient
-      class Error < StandardError
-      end
+      Error = Class.new(StandardError)
 
       def initialize(logger: Logger.new($stdout))
         @http = Net::HTTP::Persistent.new(name: self.class.name)
@@ -36,9 +35,6 @@ module RegisterSourcesOc
           jurisdiction_code:,
           company_number:
         }
-      # rescue Net::HTTP::Persistent::Error => e
-      #  logger.info("Received #{e.inspect} when reconciling \"#{search_query}\" (#{jurisdiction_code})")
-      #  nil
       rescue StandardError => e
         logger.info("Received #{e.inspect} when reconciling \"#{search_query}\" (#{jurisdiction_code})")
         nil

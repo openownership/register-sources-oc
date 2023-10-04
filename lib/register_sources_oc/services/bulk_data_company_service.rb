@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require 'elasticsearch'
-require 'register_sources_oc/repositories/company_repository'
+
+require_relative '../repositories/company_repository'
 
 module RegisterSourcesOc
   module Services
