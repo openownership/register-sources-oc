@@ -9,7 +9,8 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
       company_service:,
       reconciliation_service:,
       jurisdiction_code_service:,
-      add_id_repository:
+      add_id_repository:,
+      alt_name_repository:
     )
   end
 
@@ -17,6 +18,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
   let(:reconciliation_service) { double 'reconciliation_service' }
   let(:jurisdiction_code_service) { double 'jurisdiction_code_service' }
   let(:add_id_repository) { double 'add_id_repository' }
+  let(:alt_name_repository) { double 'alt_name_repository' }
 
   let(:company) do
     RegisterSourcesOc::Company.new(
@@ -36,6 +38,13 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
     [
       RegisterSourcesOc::AddId.new(jurisdiction_code: 'gb', company_number: '123456', identifier_system_code: 'lei',
                                    uid: '00MQKGBWLLX0RPPDO000')
+    ]
+  end
+
+  let(:alt_names) do
+    [
+      RegisterSourcesOc::AltName.new(company_number: '38284967', jurisdiction_code: 'dk',
+                                     name: 'A.P. Moller Capital P/S', start_date: '2017-08-08', type: 'trading')
     ]
   end
 
@@ -68,6 +77,8 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(company_service).to receive(:get_company).and_return company
           expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca',
                                                                          company_number: }).and_return []
+          expect(alt_name_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca',
+                                                                           company_number: }).and_return []
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -80,6 +91,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.resolved).to be true
           expect(result.company).to eq company
           expect(result.add_ids).to eq []
+          expect(result.alt_names).to eq []
         end
       end
 
@@ -100,6 +112,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.resolved).to be false
           expect(result.company).to be_nil
           expect(result.add_ids).to be_nil
+          expect(result.alt_names).to be_nil
         end
       end
 
@@ -112,6 +125,8 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(company_service).to receive(:get_company).and_return company
           expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca',
                                                                          company_number: }).and_return []
+          expect(alt_name_repository).to receive(:search_by_number).with({ jurisdiction_code: 'ca',
+                                                                           company_number: }).and_return []
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -124,6 +139,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.resolved).to be true
           expect(result.company).to eq company
           expect(result.add_ids).to eq []
+          expect(result.alt_names).to eq []
         end
       end
     end
@@ -151,6 +167,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.resolved).to be false
           expect(result.company).to be_nil
           expect(result.add_ids).to be_nil
+          expect(result.alt_names).to be_nil
         end
       end
 
@@ -174,6 +191,8 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(company_service).to receive(:get_company).and_return company
           expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:,
                                                                          company_number: '901233' }).and_return []
+          expect(alt_name_repository).to receive(:search_by_number).with({ jurisdiction_code:,
+                                                                           company_number: '901233' }).and_return []
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -186,6 +205,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.resolved).to be true
           expect(result.company).to eq company
           expect(result.add_ids).to eq []
+          expect(result.alt_names).to eq []
         end
       end
     end
@@ -197,6 +217,8 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         expect(company_service).to receive(:get_company).and_return company
         expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:,
                                                                        company_number: }).and_return []
+        expect(alt_name_repository).to receive(:search_by_number).with({ jurisdiction_code:,
+                                                                         company_number: }).and_return []
       end
       # rubocop:enable RSpec/ExpectInHook
 
@@ -208,6 +230,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         expect(result.resolved).to be true
         expect(result.company).to eq company
         expect(result.add_ids).to eq []
+        expect(result.alt_names).to eq []
       end
     end
 
@@ -225,6 +248,8 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(company_service).to receive(:search_companies).and_return []
           expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:,
                                                                          company_number: }).and_return []
+          expect(alt_name_repository).to receive(:search_by_number).with({ jurisdiction_code:,
+                                                                           company_number: }).and_return []
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -236,6 +261,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.resolved).to be false
           expect(result.company).to be_nil
           expect(result.add_ids).to eq []
+          expect(result.alt_names).to eq []
         end
       end
 
@@ -245,6 +271,8 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(company_service).to receive(:search_companies).and_return [{ company: }]
           expect(add_id_repository).to receive(:search_by_number).with({ jurisdiction_code:,
                                                                          company_number: }).and_return []
+          expect(alt_name_repository).to receive(:search_by_number).with({ jurisdiction_code:,
+                                                                           company_number: }).and_return []
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -256,6 +284,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
           expect(result.resolved).to be true
           expect(result.company).to eq company
           expect(result.add_ids).to eq []
+          expect(result.alt_names).to eq []
         end
       end
     end
@@ -268,6 +297,9 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         expect(add_id_repository).to receive(:search_by_number)
           .with({ jurisdiction_code:, company_number: })
           .and_return(add_ids.map { |e| RegisterSourcesOc::Repositories::AddIdRepository::SearchResult.new(e) })
+        expect(alt_name_repository).to receive(:search_by_number)
+          .with({ jurisdiction_code:, company_number: })
+          .and_return(alt_names.map { |e| RegisterSourcesOc::Repositories::AltNameRepository::SearchResult.new(e) })
       end
       # rubocop:enable RSpec/ExpectInHook
 
@@ -278,6 +310,7 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         expect(result.resolved).to be true
         expect(result.company).to eq company
         expect(result.add_ids).to eq add_ids
+        expect(result.alt_names).to eq alt_names
       end
     end
   end
