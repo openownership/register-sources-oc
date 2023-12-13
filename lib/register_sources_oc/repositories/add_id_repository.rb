@@ -30,14 +30,14 @@ module RegisterSourcesOc
                     {
                       match: {
                         company_number: {
-                          query: company_number
+                          query: company_number.upcase
                         }
                       }
                     },
                     {
                       match: {
                         jurisdiction_code: {
-                          query: jurisdiction_code
+                          query: jurisdiction_code.downcase
                         }
                       }
                     }
