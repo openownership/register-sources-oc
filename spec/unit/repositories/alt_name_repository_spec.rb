@@ -11,7 +11,7 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
 
   describe '#search_by_number' do
     let(:jurisdiction_code) { 'gb' }
-    let(:company_number) { 123_456 }
+    let(:company_number) { '123456' }
 
     let(:hits) { [] }
     let(:results) { { 'hits' => { 'hits' => hits } } }
@@ -21,7 +21,7 @@ RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
         query: {
           bool: {
             must: [
-              { match: { company_number: { query: 123_456 } } },
+              { match: { company_number: { query: '123456' } } },
               { match: { jurisdiction_code: { query: 'gb' } } }
             ]
           }

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../repositories/add_id_repository'
+require_relative '../repositories/alt_name_repository'
 require_relative '../structs/reconciliation_request'
 require_relative '../structs/resolver_request'
 require_relative '../structs/resolver_response'
@@ -15,12 +16,14 @@ module RegisterSourcesOc
         company_service: CompanyService.new,
         reconciliation_service: ReconciliationService.new,
         jurisdiction_code_service: JurisdictionCodeService.new,
-        add_id_repository: Repositories::AddIdRepository.new
+        add_id_repository: Repositories::AddIdRepository.new,
+        alt_name_repository: Repositories::AltNameRepository.new
       )
         @company_service = company_service
         @reconciliation_service = reconciliation_service
         @jurisdiction_code_service = jurisdiction_code_service
         @add_id_repository = add_id_repository
+        @alt_name_repository = alt_name_repository
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -62,13 +65,18 @@ module RegisterSourcesOc
           jurisdiction_code:, company_number:
         ).map(&:record)
 
+        alt_names = @alt_name_repository.search_by_number(
+          jurisdiction_code:, company_number:
+        ).map(&:record)
+
         ResolverResponse[{
           resolved: !company.nil?,
           jurisdiction_code:,
           company_number:,
           reconciliation_response:,
           company:,
-          add_ids:
+          add_ids:,
+          alt_names:
         }.compact]
       end
       # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

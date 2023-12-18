@@ -3,6 +3,7 @@
 require 'active_support/core_ext/hash/indifferent_access'
 require 'digest'
 require 'json'
+require 'register_common/elasticsearch/query'
 
 require_relative '../config/elasticsearch'
 require_relative '../structs/alt_name'
@@ -28,14 +29,14 @@ module RegisterSourcesOc
                     {
                       match: {
                         company_number: {
-                          query: company_number
+                          query: company_number.upcase
                         }
                       }
                     },
                     {
                       match: {
                         jurisdiction_code: {
-                          query: jurisdiction_code
+                          query: jurisdiction_code.downcase
                         }
                       }
                     }
@@ -45,6 +46,23 @@ module RegisterSourcesOc
             }
           )
         )
+      end
+
+      def each_alt_name(jurisdiction_codes: [], company_numbers: [], &block)
+        q_must = []
+        q_must << { terms: { jurisdiction_code: jurisdiction_codes } } unless jurisdiction_codes.empty?
+        q_must << { terms: { company_number: company_numbers } } unless company_numbers.empty?
+        q = {
+          index:,
+          body: {
+            query: {
+              bool: {
+                must: q_must
+              }
+            }
+          }
+        }
+        RegisterCommon::Elasticsearch::Query.search_scroll(client, q, &block)
       end
 
       def store(records)

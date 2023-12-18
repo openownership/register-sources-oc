@@ -2,6 +2,7 @@
 
 require_relative '../types'
 require_relative 'add_id'
+require_relative 'alt_name'
 require_relative 'company'
 require_relative 'reconciliation_response'
 
@@ -15,5 +16,6 @@ module RegisterSourcesOc
     attribute? :reconciliation_response, ReconciliationResponse.optional
     attribute? :company,                 Company.optional
     attribute? :add_ids,                 Types.Array(AddId)
+    attribute? :alt_names,               Types.Array(AltName)
   end
 end
