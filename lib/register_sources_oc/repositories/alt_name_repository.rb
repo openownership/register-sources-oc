@@ -48,23 +48,6 @@ module RegisterSourcesOc
         )
       end
 
-      def each_alt_name(jurisdiction_codes: [], company_numbers: [], &block)
-        q_must = []
-        q_must << { terms: { jurisdiction_code: jurisdiction_codes } } unless jurisdiction_codes.empty?
-        q_must << { terms: { company_number: company_numbers } } unless company_numbers.empty?
-        q = {
-          index:,
-          body: {
-            query: {
-              bool: {
-                must: q_must
-              }
-            }
-          }
-        }
-        RegisterCommon::Elasticsearch::Query.search_scroll(client, q, &block)
-      end
-
       def store(records)
         operations = records.map do |record|
           {
