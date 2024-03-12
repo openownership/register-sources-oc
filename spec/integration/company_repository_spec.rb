@@ -19,6 +19,10 @@ RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
     index_creator.create_companies_index
   end
 
+  after do
+    es_client.indices.delete(index:)
+  end
+
   describe '#store' do
     it 'stores' do
       records = [
