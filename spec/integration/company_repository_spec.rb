@@ -1,22 +1,23 @@
 # frozen_string_literal: true
 
 require 'elasticsearch'
-require 'register_sources_oc/repositories/company_repository'
+require 'register_sources_oc/repository'
 require 'register_sources_oc/services/es_index_creator'
 require 'register_sources_oc/structs/company'
 
-RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
-  subject { described_class.new(client: es_client, index:) }
+RSpec.describe RegisterSourcesOc::Repository do
+  subject { described_class.new(RegisterSourcesOc::Company, id_digest: false, client: es_client, index:) }
 
-  let(:index) { SecureRandom.uuid }
+  let(:index) { "tmp-#{SecureRandom.uuid}" }
   let(:es_client) { Elasticsearch::Client.new }
 
   before do
-    index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
-      companies_index: index,
-      client: es_client
-    )
-    index_creator.create_companies_index
+    index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(client: es_client)
+    index_creator.create_companies_index(index)
+  end
+
+  after do
+    es_client.indices.delete(index:)
   end
 
   describe '#store' do

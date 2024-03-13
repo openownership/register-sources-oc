@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require 'register_sources_oc/repositories/alt_name_repository'
+require 'register_sources_oc/repository'
+require 'register_sources_oc/structs/alt_name'
 
-RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
-  subject { described_class.new(client: es_client, index:) }
+RSpec.describe RegisterSourcesOc::Repository do
+  subject { described_class.new(RegisterSourcesOc::AltName, client: es_client, index:) }
 
   let(:es_client) { double 'es_client' }
   let(:index) { double 'index' }

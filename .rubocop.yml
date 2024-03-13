@@ -11,6 +11,8 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/MethodLength:
   Enabled: false
+RSpec/FilePath:
+  Enabled: false
 RSpec/IndexedLet:
   Enabled: false
 Style/Documentation:
@@ -36,30 +38,6 @@ RSpec/ExampleLength:
     - spec/unit/services/resolver_service_spec.rb
     - spec/unit/structs/alt_name_spec.rb
     - spec/unit/structs/company_spec.rb
-RSpec/FilePath:
-  Exclude:
-    - spec/integration/add_id_repository_spec.rb
-    - spec/integration/alt_name_repository_spec.rb
-    - spec/integration/company_repository_spec.rb
-    - spec/unit/clients/google_geocoder_client_spec.rb
-    - spec/unit/clients/open_corporate_client_spec.rb
-    - spec/unit/clients/reconciliation_client_spec.rb
-    - spec/unit/register_sources_oc.rb
-    - spec/unit/repositories/add_id_repository_spec.rb
-    - spec/unit/repositories/alt_name_repository_spec.rb
-    - spec/unit/repositories/company_repository_spec.rb
-    - spec/unit/services/bulk_data_company_service_spec.rb
-    - spec/unit/services/jurisdiction_code_service_spec.rb
-    - spec/unit/services/oc_api_company_service_spec.rb
-    - spec/unit/services/reconciliation_service_spec.rb
-    - spec/unit/services/resolver_service_spec.rb
-    - spec/unit/structs/add_id_spec.rb
-    - spec/unit/structs/alt_name_spec.rb
-    - spec/unit/structs/company_spec.rb
-    - spec/unit/structs/reconciliation_request_spec.rb
-    - spec/unit/structs/reconciliation_response_spec.rb
-    - spec/unit/structs/resolver_request_spec.rb
-    - spec/unit/structs/resolver_response_spec.rb
 RSpec/MessageSpies:
   Exclude:
     - spec/unit/clients/open_corporate_client_spec.rb

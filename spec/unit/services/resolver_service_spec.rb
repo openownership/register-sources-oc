@@ -296,10 +296,10 @@ RSpec.describe RegisterSourcesOc::Services::ResolverService do
         expect(company_service).to receive(:get_company).and_return company
         expect(add_id_repository).to receive(:search_by_number)
           .with({ jurisdiction_code:, company_number: })
-          .and_return(add_ids.map { |e| RegisterSourcesOc::Repositories::AddIdRepository::SearchResult.new(e) })
+          .and_return(add_ids.map { |e| RegisterSourcesOc::Repository::SearchResult.new(e) })
         expect(alt_name_repository).to receive(:search_by_number)
           .with({ jurisdiction_code:, company_number: })
-          .and_return(alt_names.map { |e| RegisterSourcesOc::Repositories::AltNameRepository::SearchResult.new(e) })
+          .and_return(alt_names.map { |e| RegisterSourcesOc::Repository::SearchResult.new(e) })
       end
       # rubocop:enable RSpec/ExpectInHook
 

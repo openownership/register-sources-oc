@@ -1,22 +1,23 @@
 # frozen_string_literal: true
 
 require 'elasticsearch'
-require 'register_sources_oc/repositories/alt_name_repository'
+require 'register_sources_oc/repository'
 require 'register_sources_oc/services/es_index_creator'
 require 'register_sources_oc/structs/alt_name'
 
-RSpec.describe RegisterSourcesOc::Repositories::AltNameRepository do
-  subject { described_class.new(client: es_client, index:) }
+RSpec.describe RegisterSourcesOc::Repository do
+  subject { described_class.new(RegisterSourcesOc::AltName, client: es_client, index:) }
 
-  let(:index) { SecureRandom.uuid }
+  let(:index) { "tmp-#{SecureRandom.uuid}" }
   let(:es_client) { Elasticsearch::Client.new }
 
   before do
-    index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(
-      alt_names_index: index,
-      client: es_client
-    )
-    index_creator.create_alt_names_index
+    index_creator = RegisterSourcesOc::Services::EsIndexCreator.new(client: es_client)
+    index_creator.create_alt_names_index(index)
+  end
+
+  after do
+    es_client.indices.delete(index:)
   end
 
   describe '#store' do
