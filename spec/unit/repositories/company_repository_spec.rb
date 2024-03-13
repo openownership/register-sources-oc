@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'register_sources_oc/repositories/company_repository'
+require 'register_sources_oc/repository'
 
-RSpec.describe RegisterSourcesOc::Repositories::CompanyRepository do
-  subject { described_class.new(client: es_client, index:) }
+RSpec.describe RegisterSourcesOc::Repository do
+  subject { described_class.new(RegisterSourcesOc::Company, id_digest: false, client: es_client, index:) }
 
   let(:es_client) { double 'es_client' }
   let(:index) { double 'index' }

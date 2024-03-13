@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../repositories/add_id_repository'
-require_relative '../repositories/alt_name_repository'
+require_relative '../repository'
 require_relative '../structs/reconciliation_request'
 require_relative '../structs/resolver_request'
 require_relative '../structs/resolver_response'
@@ -16,8 +15,8 @@ module RegisterSourcesOc
         company_service: CompanyService.new,
         reconciliation_service: ReconciliationService.new,
         jurisdiction_code_service: JurisdictionCodeService.new,
-        add_id_repository: Repositories::AddIdRepository.new,
-        alt_name_repository: Repositories::AltNameRepository.new
+        add_id_repository: Repository.new(AddId, index: Config::ELASTICSEARCH_INDEX_ADD_IDS),
+        alt_name_repository: Repository.new(AltName, index: Config::ELASTICSEARCH_INDEX_ALT_NAMES)
       )
         @company_service = company_service
         @reconciliation_service = reconciliation_service

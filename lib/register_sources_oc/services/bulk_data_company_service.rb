@@ -2,7 +2,7 @@
 
 require 'elasticsearch'
 
-require_relative '../repositories/company_repository'
+require_relative '../repository'
 
 module RegisterSourcesOc
   module Services
@@ -10,7 +10,7 @@ module RegisterSourcesOc
       DEFAULT_JURISDICTION_CODES = %w[gb sk dk].freeze
 
       def initialize(
-        company_repository: Repositories::CompanyRepository.new,
+        company_repository: Repository.new(Company, id_digest: false, index: Config::ELASTICSEARCH_INDEX_COMPANIES),
         jurisdiction_codes: DEFAULT_JURISDICTION_CODES,
         repository_enabled: true
       )
