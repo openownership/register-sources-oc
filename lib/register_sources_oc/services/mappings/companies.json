@@ -20,6 +20,15 @@
     "incorporation_date": {
       "type": "keyword"
     },
+    "industry_code_uids": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
     "dissolution_date": {
       "type": "keyword"
     },
