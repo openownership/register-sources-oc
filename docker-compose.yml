@@ -42,6 +42,5 @@ services:
       - ./lib:/home/x/r/lib
       - ./register_sources_oc.gemspec:/home/x/r/register_sources_oc.gemspec
       - ./spec:/home/x/r/spec
-version: "3.8"
 volumes:
   elasticsearch: {}
