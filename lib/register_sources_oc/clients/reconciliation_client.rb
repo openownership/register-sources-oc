@@ -12,6 +12,7 @@ module RegisterSourcesOc
 
       def initialize(logger: Logger.new($stdout))
         @http = Net::HTTP::Persistent.new(name: self.class.name)
+        @http.proxy = URI(ENV.fetch('OC_PROXY')) if ENV['OC_PROXY']
         @logger = logger
       end
 
