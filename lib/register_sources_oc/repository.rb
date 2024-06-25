@@ -3,6 +3,7 @@
 require 'active_support/core_ext/hash/indifferent_access'
 require 'digest'
 require 'json'
+require 'register_common/elasticsearch/query'
 
 require_relative 'config/elasticsearch'
 
@@ -15,6 +16,24 @@ module RegisterSourcesOc
       @id_digest = id_digest
       @client = client
       @index = index
+    end
+
+    def each(q_must: [], q_filter: [], q_should: [], q_must_not: [], latest: true, &block)
+      q_must_not << { match: { 'metadata.replaced': true } } if latest
+      q = {
+        index:,
+        body: {
+          query: {
+            bool: {
+              must: q_must,
+              filter: q_filter,
+              should: q_should,
+              must_not: q_must_not
+            }
+          }
+        }
+      }
+      RegisterCommon::Elasticsearch::Query.search_scroll(client, q, &block)
     end
 
     def get(jurisdiction_code:, company_number:)
