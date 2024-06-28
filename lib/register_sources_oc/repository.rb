@@ -18,8 +18,7 @@ module RegisterSourcesOc
       @index = index
     end
 
-    def each(q_must: [], q_filter: [], q_should: [], q_must_not: [], latest: true, &block)
-      q_must_not << { match: { 'metadata.replaced': true } } if latest
+    def each(q_must: [], q_filter: [], q_should: [], q_must_not: [], &block)
       q = {
         index:,
         body: {
